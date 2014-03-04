@@ -1,0 +1,9 @@
+*.[oa]
+*~
+obj/*
+exe
+
+/olds/
+
+/openGl.sublime-project
+/openGl.sublime-workspace
