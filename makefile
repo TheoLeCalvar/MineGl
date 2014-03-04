@@ -24,11 +24,20 @@ OBJ := $(addprefix $(OBJDIR)/, $(OBJ))
 all: $(EXEC)
  
 $(EXEC): $(OBJ)
-	@$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
  
 $(OBJDIR)/%.o: %.$(EXT)
-	@$(CXX) -o $@ -c $< $(CXXFLAGS)
+	$(CXX) -o $@ -c $< $(CXXFLAGS)
  
 clean:
 	@rm -rf $(OBJDIR)/*.o
 	@rm -f $(EXEC)
+
+deploy: $(EXEC)
+	install_name_tool -change /usr/lib/libSystem.B.dylib @executable_path/lib/libSystem.B.dylib $(EXEC)
+	install_name_tool -change /usr/local/lib/libSOIL.dylib @executable_path/lib/libSOIL.dylib $(EXEC)
+	install_name_tool -change /usr/local/lib/libglfw3.3.0.dylib @executable_path/lib/libSystem.B.dylib $(EXEC)
+	install_name_tool -change /usr/lib/libc++.1.dylib @executable_path/lib/libc++.1.dylib $(EXEC)
+
+zip: deploy
+	zip out.zip $(EXEC) lib/* texture/textures.png
