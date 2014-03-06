@@ -1,4 +1,5 @@
 #include "moteur.hpp"
+#include <stdlib.h> //srand
 #include <ctime>
 
 int main(int argc, char **argv)

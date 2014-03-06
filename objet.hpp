@@ -1,10 +1,7 @@
 #ifndef OBJET_H
 #define OBJET_H 
 
-#include <iostream>
 #include <SOIL/SOIL.h>
-#include <cstdlib>
-#include <cmath>
 #include "vect3D.hpp"
 #include "vect4D.hpp"
 #include "renderer.hpp"

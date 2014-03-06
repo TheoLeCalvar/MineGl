@@ -4,10 +4,9 @@
 #include "vect3D.hpp"
 
 #ifdef __APPLE__
-//gestion de la souris
-	#include <GLUT/glut.h>
+	#include <OpenGL/gl.h>
 #else
-	#include <GL/glut.h>
+	#include <GL/gl.h>
 #endif
 
 

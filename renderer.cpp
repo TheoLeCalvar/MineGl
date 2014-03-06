@@ -1,11 +1,11 @@
 #include "renderer.hpp"
-#include <string.h>
+#include <string.h> //memcpy
 
 
 Renderer * 	Renderer::_instance = NULL;
 
 Renderer::Renderer(): 
-_useNormals(false), _normX(0.0f), _normY(0.0f), _normZ(1.0f),
+_useNormals(true), _normX(0.0f), _normY(0.0f), _normZ(1.0f),
 _useTex(true), _texU(0.0f), _texV(0.0f), 
 _transX(0.0f), _transY(0.0f), _transZ(0.0f),
 _buffer(NULL), _bufSize(0), _bufIndex(0), _verticesCount(0)
@@ -138,8 +138,22 @@ void 		Renderer::setTranslation(GLfloat *v)
 
 void 		Renderer::display()
 {
+	static GLfloat amb[] = {0.2f, 0.2f, 0.2f, 1.0f};
+	static GLfloat dif[] = {0.8f, 0.8f, 0.8f, 1.0f};
+	static GLfloat spe[] = {0.0f, 0.0f, 0.0f, 1.0f};
+
+
 	glPushMatrix();
 		
+		glMaterialfv(GL_FRONT, GL_AMBIENT, amb);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, dif);
+		glMaterialfv(GL_BACK, GL_AMBIENT, spe);
+		glMaterialfv(GL_BACK, GL_DIFFUSE, spe);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spe);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, spe);
+		glMaterialf(GL_FRONT, GL_SHININESS, 0);
+
+
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, 8 * sizeof(GLfloat), _buffer);
 

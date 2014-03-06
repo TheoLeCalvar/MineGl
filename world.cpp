@@ -1,5 +1,6 @@
 #include "world.hpp"
 
+#include <cstdlib> //rand
 
 
 World::World(Renderer * renderer):

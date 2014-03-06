@@ -6,14 +6,12 @@
 	#include <ApplicationServices/ApplicationServices.h>
 	#include <OpenGL/gl.h>
 	#include <OpenGL/glu.h>
-	#include <GLUT/glut.h>
 #else
 #ifdef _WIN32
 	#include <windows.h>
 #endif
 	#include <GL/gl.h>
 	#include <GL/glu.h>
-	#include <GL/glut.h>
 #endif
 
 #include <GLFW/glfw3.h>
@@ -53,20 +51,14 @@ public:
 
 	void 		start();
 
-	void 		enable(GLenum  cap);
-	void 		disable(GLenum  cap);
-	GLboolean 	isEnabled(GLenum  cap) const;
-
 	void 		switch_blend();
 	void 		switch_light();
 	void 		switch_cullface();
 	void 		switch_wire();
 
-//	static void touche_handler(GLFWwindow * w, unsigned int key);
 	static void keyboard_handler(GLFWwindow *, int key, int scancode, int action, int mods);
 	static void mouse_event(GLFWwindow *, double x, double y);
 
-	static void redimensionne(GLFWwindow* window, int width, int height);
 
 
 private:

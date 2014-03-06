@@ -67,6 +67,7 @@ void Camera::vectorFromAngle()
 
 
     avant.set(tmp * cos(theta * M_PI/180), tmp * sin(theta * M_PI/180), sin(phi * M_PI/180));
+    avant.normalize();
 
     gauche = up * avant;
     gauche.normalize();
@@ -82,6 +83,18 @@ void Camera::display()
     glLoadIdentity();
 
 
-    gluLookAt(eye[0], eye[1], eye[2], center[0], center[1], center[2], 0, 0, 1);  
+    //calcul de la matrice de gluLookAt (deprecated)
+    Vect3D up = -gauche * avant;
+
+    GLfloat M[] =
+    {
+        -gauche[0], up[0], -avant[0], 0.0f,
+        -gauche[1], up[1], -avant[1], 0.0f,
+        -gauche[2], up[2], -avant[2], 0.0f,
+        0.0f, 0.0f, 0.0f,  1.0f
+    };
+
+    glMultMatrixf(M);
+    glTranslated(-eye[0], -eye[1], -eye[2]);
 
 }

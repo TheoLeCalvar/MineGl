@@ -1,7 +1,6 @@
 #include "cube.hpp"
-#include <cstdlib>
-#include <math.h>
-#include <iostream>
+
+
 
 
 GLfloat Cube::_points[] = 
@@ -16,15 +15,6 @@ GLfloat Cube::_points[] =
 	-0.5f, 	0.5f, 	0.5f,	//7 - 21
 };
 
-GLfloat _normals[] =
-{
-	1.0f, 0.0f, 0.0f,
-	0.0f, 1.0f, 0.0f,
-	-1.0f, 0.0f, 0.0f, 
-	0.0f, -1.0f, 0.0f,
-	0.0f, 0.0f, 1.0f, 
-	0.0f, 0.0f, -1.0f 
-};
 
 Cube::Cube(GLfloat size, char visibility):
 _visibility(visibility)

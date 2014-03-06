@@ -7,6 +7,8 @@
 #include <GL/gl.h>
 #endif
 
+#include <cmath>
+
 template <typename T>
 class Vect4D
 {

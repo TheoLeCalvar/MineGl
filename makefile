@@ -6,13 +6,13 @@ EXEC = exe
 UNAME = $(shell uname)
 
 ifeq ($(UNAME), Darwin)
-CXXFLAGS = -Wall -Wno-deprecated-declarations  -g
-LDFLAGS = -framework OpenGL -framework GLUT  -framework ApplicationServices -lSOIL -L/usr/local/lib -lglfw3
+CXXFLAGS = -Wall  -g
+LDFLAGS = -framework OpenGL -framework ApplicationServices -lSOIL -L/usr/local/lib -lglfw3
 endif
 
 ifeq ($(UNAME), Linux)
 CXXFLAGS = -Wall
-LDFLAGS = -lglut -lGL -lGLU -lglfw3 -lX11 -lXxf86vm -lXrandr -lpthread -lXi
+LDFLAGS = -lSOIL -lGL -lGLU -lglfw3 -lX11 -lXxf86vm -lXrandr -lpthread -lXi
 endif
  
  

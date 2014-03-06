@@ -20,7 +20,6 @@ Moteur * Moteur::create()
 
 Moteur::Moteur()
 {
-
     glfwInit();
 
     m_window = glfwCreateWindow(800, 600, "OpenGL", NULL, NULL);
@@ -32,17 +31,12 @@ Moteur::Moteur()
     init_scene();
 
 
-    glfwSetFramebufferSizeCallback(m_window, Moteur::redimensionne);
     glfwSetKeyCallback(m_window, Moteur::keyboard_handler);
     glfwSetCursorPosCallback(m_window, Moteur::mouse_event);
 
 
     glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     glfwSetCursorPos (m_window, 400, 300);
-
-    #ifdef __APPLE__
-        CGSetLocalEventsSuppressionInterval(0.0);
-    #endif
 }
 
 Moteur::~Moteur()
@@ -88,6 +82,9 @@ void Moteur::start()
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+
 
 
     glViewport(0,0, width, height);
@@ -95,7 +92,24 @@ void Moteur::start()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    gluPerspective(45.0f, (GLdouble)width/(GLdouble)height, 1.0, 100.0);
+
+
+    //remplacement de gluPerspective, deprecated
+    GLfloat angle = 45.0f;
+    GLfloat f = 1.0f / tan((angle * (M_PI/180.0f))/2.0f);
+    GLfloat zFar = 200.0f, zNear = 1.0f;
+    GLfloat aspect = (GLdouble)width/(GLdouble)height;
+    GLfloat perspective[] =
+    {
+        f/aspect, 0.0f, 0.0f, 0.0f,
+        0.0f, f, 0.0f, 0.0f,
+        0.0f, 0.0f, (zNear + zFar)/(zNear - zFar), -1.0f,
+        0.0f, 0.0f, (2*zFar*zNear)/(zNear - zFar), 0.0f
+    };
+
+    glMultMatrixf(perspective);
+
+    // gluPerspective(angle, aspect, zNear, zFar);
 
     glMatrixMode(GL_MODELVIEW);
 
@@ -145,7 +159,6 @@ void Moteur::start()
     delete _world;
     delete m_camera;
     _renderer->destroy();
-
 }
 
 void Moteur::mouse_event(GLFWwindow *, double x, double y)
@@ -164,7 +177,16 @@ void Moteur::mouse_event(GLFWwindow *, double x, double y)
 
         mot->m_camera->vectorFromAngle();
 
-        glfwSetCursorPos (mot->m_window, width, height);
+        #ifdef __APPLE__    
+            int xpos, ypos;
+            glfwGetWindowPos(mot->m_window, &xpos, &ypos);
+
+            CGPoint warpPoint = CGPointMake(width + xpos, height + ypos);
+            CGWarpMouseCursorPosition(warpPoint);
+            CGAssociateMouseAndMouseCursorPosition(true);
+        #else
+            glfwSetCursorPos (mot->m_window, width, height);
+        #endif
     }
 }
 
@@ -301,9 +323,10 @@ void Moteur::switch_wire()
 //TODO: passer à un modèle propre de la lumière
 void Moteur::lumiere()
 {
-    GLfloat lum_amb[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat lum_pos[] = {0.0f, 0.0f, 10.0f, 1.0f};
-    GLfloat lum_dif[] =  {0.3f, 0.3f, 0.3f, 1.0f};
+    GLfloat lum_amb[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat lum_pos[] = {10.0f, -20.0f, 10.0f, 1.0f};
+    GLfloat lum_dif[] = {0.8f, 0.8f, 0.8f, 1.0f};
+
 
 
 
@@ -313,14 +336,8 @@ void Moteur::lumiere()
     glLightfv(GL_LIGHT1, GL_SPECULAR, lum_dif);
 
 
+
     glEnable(GL_LIGHT1);
-}
-
-void Moteur::redimensionne(GLFWwindow* window, int width, int height)
-{
-    std::cout << width << ", " << height << std::endl;
-
-
 }
 
 void  Moteur::init_scene()
@@ -332,9 +349,9 @@ void  Moteur::init_scene()
 
     // int maxI = 100, maxJ = 100, maxK = 10, r;
 
-    // Cube *c = new Stone(4.0f, false, true, true, true, true, true);
+    // Cube *c = new Stone(4.0f, 127);
     // m_listeObjet.push_back(c);
-    // c = new Grass(2.0f, true, true, true, true, true, true);
+    // c = new Grass(2.0f, 127);
     // c->setTranslation(2.0f, -1.0f, 0.0f);
     // m_listeObjet.push_back(c);
     // Cube * c;
