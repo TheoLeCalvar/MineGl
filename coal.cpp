@@ -1,6 +1,5 @@
 #include "coal.hpp"
 
-
 Coal::Coal(GLfloat size, char visibility):
 Cube(size, visibility)
 {

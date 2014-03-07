@@ -3,10 +3,11 @@
 #include <cstdlib> //rand
 
 
+
 World::World(Renderer * renderer):
 _renderer(renderer)
 {
-	int x, y, z = 0;
+	int x = 0, y = 0, z = 0;
 	Objet::setRenderer(_renderer);
 	_blocs.reserve(WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ);
 
@@ -20,7 +21,6 @@ _renderer(renderer)
 			{
 				c = new Stone();
 				c->setTranslation(x, y, z);
-
 			}
 			else
 			{
@@ -77,7 +77,6 @@ _renderer(renderer)
 				| 
 					((z == WORLDSIZEZ-1) || !_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z+1)] ? TOP : 0)
 				);
-
 			if (((z == WORLDSIZEZ-1) || !_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z+1)]) && dynamic_cast<Dirt *>((*i)))
 			{
 				char vis = (*i)->getVisibility();
@@ -127,6 +126,5 @@ void World::draw()
 		{
 			(*i)->display();
 		}
-
 	}
 }

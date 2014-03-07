@@ -82,8 +82,8 @@ void Moteur::start()
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+    // glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+    // glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 
 
 
@@ -130,7 +130,6 @@ void Moteur::start()
         glEnd();
         // for (std::vector<Objet *>::iterator i = mot->m_listeObjet.begin(); i != mot->m_listeObjet.end(); ++i)
         // {
-        //     (*i)->setRenderer(_renderer);
         //     (*i)->display();
         // }
         _world->draw();
@@ -347,7 +346,7 @@ void  Moteur::init_scene()
 
     _world = new World(_renderer);
 
-    // int maxI = 100, maxJ = 100, maxK = 10, r;
+    // int maxI = 20, maxJ = 20, maxK = 10, r;
 
     // Cube *c = new Stone(4.0f, 127);
     // m_listeObjet.push_back(c);
@@ -363,15 +362,15 @@ void  Moteur::init_scene()
     //         {
     //             if ((r = rand())%4)
     //             {
-    //                 c = new Grass(1.0f, (i==(maxI-1)), (j==(maxJ-1)), (i==0), (j==0), (k==(maxK-1)), (k==0));
+    //                 c = new Grass(1.0f, 63);
     //             }
     //             else if (r %3)
     //             {
-    //                 c = new Stone(1.0f, (i==(maxI-1)), (j==(maxJ-1)), (i==0), (j==0), (k==(maxK-1)), (k==0));
+    //                 c = new Stone(1.0f, 63);
     //             }
     //             else
     //             {
-    //                 c = new Coal(1.0f, (i==(maxI-1)), (j==(maxJ-1)), (i==0), (j==0), (k==maxK-1), (k==0));
+    //                 c = new Coal(1.0f, 63);
     //             }
                 
     //             c->setTranslation(i, j, k);
