@@ -16,7 +16,7 @@
 class Objet
 {
 protected:
-  Renderer *      _renderer;
+  static Renderer *      _renderer;
 
 
   static GLuint   m_texId;
@@ -38,7 +38,7 @@ public:
 	virtual void display() = 0;
   virtual void switch_normale(){display_normale = !display_normale;}
 
-  virtual void setRenderer(Renderer * r){_renderer = r;}
+  static  void setRenderer(Renderer * r){_renderer = r;}
 
  	virtual void setTranslation(Vect3D v);
   virtual void setTranslation(GLdouble x, GLdouble y, GLdouble z);

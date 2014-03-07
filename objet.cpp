@@ -1,9 +1,9 @@
 #include "objet.hpp"
 
 GLuint Objet::m_texId = 0;
+Renderer * Objet::_renderer = NULL;
 
 Objet::Objet():
-	_renderer(NULL),
 	m_translation(0.0f, 0.0f, 0.0f), 
 	m_scale(1.0f, 1.0f, 1.0f),
 	m_rotation_axe(0.0f, 0.0f, 1.0f), m_rotation_angle(0.0f),

@@ -7,7 +7,7 @@ World::World(Renderer * renderer):
 _renderer(renderer)
 {
 	int x, y, z = 0;
-
+	Objet::setRenderer(_renderer);
 	_blocs.reserve(WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ);
 
 	//repmplir le monde
@@ -85,7 +85,6 @@ _renderer(renderer)
 				*i = new Grass(1.0f, vis);
 				(*i)->setTranslation(x, y, z);
 			}
-			(*i)->setRenderer(_renderer);
 		}
 
 
