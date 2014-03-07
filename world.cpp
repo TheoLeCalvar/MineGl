@@ -85,6 +85,7 @@ _renderer(renderer)
 				*i = new Grass(1.0f, vis);
 				(*i)->setTranslation(x, y, z);
 			}
+			(*i)->setRenderer(_renderer);
 		}
 
 
@@ -125,7 +126,6 @@ void World::draw()
 	{
 		if (*i)
 		{
-			(*i)->setRenderer(_renderer);
 			(*i)->display();
 		}
 
