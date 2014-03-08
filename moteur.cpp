@@ -337,14 +337,33 @@ void Moteur::lumiere()
 
 
     glEnable(GL_LIGHT1);
+
+
+    GLfloat lum_amb2[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat lum_pos2[] = {0.0f, 0.0f, 100.0f, 1.0f};
+    GLfloat lum_dif2[] = {0.8f, 0.8f, 0.8f, 1.0f};
+
+
+
+
+    glLightfv(GL_LIGHT2, GL_POSITION, lum_pos2);
+    glLightfv(GL_LIGHT2, GL_AMBIENT , lum_amb2);
+    glLightfv(GL_LIGHT2, GL_DIFFUSE, lum_dif2);
+    glLightfv(GL_LIGHT2, GL_SPECULAR, lum_dif2);
+
+
+
+    glEnable(GL_LIGHT2);
 }
 
 void  Moteur::init_scene()
 {
     _renderer = Renderer::create();
-    m_camera = new Camera(-2, -2, 0);
+    m_camera = new Camera(-20, -20, 80);
 
     _world = new World(_renderer);
+
+
 
     // int maxI = 20, maxJ = 20, maxK = 10, r;
 

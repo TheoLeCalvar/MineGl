@@ -1,8 +1,8 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#define WORLDSIZEX 64
-#define WORLDSIZEY 64
+#define WORLDSIZEX 129
+#define WORLDSIZEY 129
 #define WORLDSIZEZ 64
 
 #ifdef __APPLE__
@@ -34,6 +34,10 @@ public:
 	~World();
 
 	void draw();
+
+private:
+	void 	genHeight();
+	void 	calcVisibility();
 	
 };
 
