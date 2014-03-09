@@ -28,6 +28,7 @@
 #include "grass.hpp"
 #include "stone.hpp"
 #include "coal.hpp"
+#include "water.hpp"
 
 
 
@@ -51,7 +52,6 @@ public:
 
 	void 		start();
 
-	void 		switch_blend();
 	void 		switch_light();
 	void 		switch_cullface();
 	void 		switch_wire();

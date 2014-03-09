@@ -1,7 +1,8 @@
 #include "cube.hpp"
 
 
-
+Renderer * Cube::_renderer = NULL;
+GLuint Cube::_texId[] = {0, 0};
 
 
 GLfloat Cube::_points[] = 
@@ -17,15 +18,37 @@ GLfloat Cube::_points[] =
 };
 
 
-Cube::Cube(GLfloat size, char visibility):
+Cube::Cube(unsigned char visibility):
 _visibility(visibility)
 {
-	setScale(size, size, size);
 }
 
-void Cube::display(){
-	_renderer->setTranslation(m_translation[0], m_translation[1], m_translation[2]);
+void Cube::loadTexture()
+{
+	int width = 64, height = 64;
+	unsigned char  * m_image;
 
+	glActiveTexture(GL_TEXTURE0);
+	m_image = SOIL_load_image("texture/textures.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	glGenTextures(2, _texId);
+	glBindTexture(GL_TEXTURE_2D, _texId[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	SOIL_free_image_data(m_image);
+
+	width = 16;
+	height = 1024;
+	m_image = SOIL_load_image("texture/water_still.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	glBindTexture(GL_TEXTURE_2D, _texId[1]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	SOIL_free_image_data(m_image);
+}
+
+void Cube::display()
+{
 	if (_visibility & FRONT)
 	{
 		//face avant

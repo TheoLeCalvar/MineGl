@@ -1,15 +1,14 @@
 #include "stone.hpp"
 
 
-Stone::Stone(GLfloat size, char visibility):
-Cube(size, visibility)
+Stone::Stone(unsigned char visibility):
+Cube(visibility)
 {
 
 }
 
 void Stone::display()
 {
-	_renderer->setTranslation(m_translation[0], m_translation[1], m_translation[2]);
 
 	if (_visibility & FRONT)
 	{

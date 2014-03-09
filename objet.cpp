@@ -1,6 +1,5 @@
 #include "objet.hpp"
 
-GLuint Objet::m_texId = 0;
 Renderer * Objet::_renderer = NULL;
 
 Objet::Objet():
@@ -12,20 +11,6 @@ Objet::Objet():
 	m_specular(0.8f, 0.8f, 0.8f, 1.0f), m_emission(0.0f, 0.0f, 0.0f, 1.0f),
 	m_shininess(1)
 {
-	if (!m_texId)
-	{
-		int width = 64, height = 64, channel = 0;
-		unsigned char  * m_image;
-
-		glActiveTexture(GL_TEXTURE0);
-		m_image = SOIL_load_image("texture/textures.png", &width, &height, &channel, SOIL_LOAD_RGBA);
-		glGenTextures(1, &m_texId);
-		glBindTexture(GL_TEXTURE_2D, m_texId);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		SOIL_free_image_data(m_image);
-	}
 }
 
 Objet::~Objet(){

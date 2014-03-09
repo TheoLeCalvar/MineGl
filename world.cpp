@@ -9,15 +9,16 @@
 World::World(Renderer * renderer):
 _renderer(renderer)
 {
-	int x = 0, y = 0, z = 0;
-	Objet::setRenderer(_renderer);
+	Cube::setRenderer(_renderer);
+	Cube::loadTexture();
+	
 	_blocs.reserve(WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ);
 
 
 	genHeight();
 
 
-	//calculer les visibilités des blocs
+	//calcule les visibilités des blocs
 	calcVisibility();
 
 }
@@ -35,14 +36,57 @@ World::~World()
 
 
 void World::draw()
-{
-	for (std::vector<Cube *>::iterator i = _blocs.begin(); i != _blocs.end(); ++i)
+{	
+	std::vector<Cube *> v;
+
+	//parcour du monde, affichage des blocs non transparents, stockage des blocs transparent dans un vector temporaire pour un affichage plus tard
+	_renderer->clean();
+	_renderer->setActiveTex(Cube::_texId[0]);
+	_renderer->setBlending(false);
+
+	for (int i = 0, x = 0, y = 0, z = 0; i < WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ; ++i)
 	{
-		if (*i)
+		if (_blocs[i])
 		{
-			(*i)->display();
+			if (_blocs[i]->isTransparent())
+			{
+				v.push_back(_blocs[i]);
+			}
+			else
+			{	
+				_renderer->setTranslation(x, y, z);
+				_blocs[i]->display();
+			}
+		}
+
+		++x;
+		if (x == WORLDSIZEX)
+		{
+			++y;
+			x = 0;
+		}
+		if (y == WORLDSIZEY)
+		{
+			++z;
+			y = 0;
 		}
 	}
+
+
+	_renderer->display();
+	
+	//affichage des blocs transparents trouvés lors du premier parcours du monde
+	_renderer->clean();
+	_renderer->setActiveTex(Cube::_texId[1]);
+	_renderer->setBlending(true);
+
+	for (std::vector<Cube *>::iterator i = v.begin(); i != v.end(); ++i)
+	{
+		(*i)->display();
+	}
+
+	_renderer->display();
+
 }
 
 void World::genHeight()
@@ -193,20 +237,18 @@ void World::genHeight()
 	{
 		if ((z == map[x + y * WORLDSIZEX]-1) || (z == map[x + y * WORLDSIZEX]))
 		{
-			c = new Dirt(1.0f, 63);
-			c->setTranslation(x, y, z);
+			c = new Dirt(63);
 		}
 		else if (z < map[x + y * WORLDSIZEX])
 		{
 			if (rand()%4)
 			{
-				c = new Coal(1.0f, 63);
+				c = new Coal(63);
 			}
 			else
 			{
-				c = new Stone(1.0f, 63);
+				c = new Stone(63);
 			}
-			c->setTranslation(x, y, z);
 		}
 		else
 		{
@@ -214,6 +256,33 @@ void World::genHeight()
 		}
 
 		_blocs.push_back(c);
+
+		++x;
+		if (x == WORLDSIZEX)
+		{
+			++y;
+			x = 0;
+		}
+		if (y == WORLDSIZEY)
+		{
+			++z;
+			y = 0;
+		}
+	}
+
+	//remplacement des blocs d'air par de l'eau pour les blocs en dessous de 30
+	for (int i = 0, x = 0, y = 0, z = 0; z <= WATER_LEVEL; ++i)
+	{
+		if (!_blocs[i])
+		{
+			Water *w = new Water(127);
+			w->setPosition(x, y, z);
+			_blocs[i] = w;
+		}
+
+
+
+
 
 		++x;
 		if (x == WORLDSIZEX)
@@ -240,24 +309,25 @@ void World::calcVisibility()
 		if (*i)
 		{			
 			(*i)->setVisibility(
-					((x > 0) && !_blocs[x-1 + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * z] ? BACK : 0)
+					((x > 0) && (!_blocs[x-1 + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * z] || (_blocs[x-1 + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * z]->isTransparent() && !(*i)->isTransparent()))? BACK : 0)
 				|
-					((y > 0) && !_blocs[x + WORLDSIZEY * (y-1) + WORLDSIZEY * WORLDSIZEX * z] ? LEFT : 0)
+					((y > 0) && (!_blocs[x + WORLDSIZEY * (y-1) + WORLDSIZEY * WORLDSIZEX * z] || (_blocs[x + WORLDSIZEY * (y-1) + WORLDSIZEY * WORLDSIZEX * z]->isTransparent() && !(*i)->isTransparent()))? LEFT : 0)
 				| 
-					((z > 0) && !_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z-1)] ? BOT : 0)
+					((z > 0) && (!_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z-1)] || (_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z-1)]->isTransparent() && !(*i)->isTransparent())) ? BOT : 0)
 				|
-					((x < WORLDSIZEX) && !_blocs[x+1 + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * z] ? FRONT : 0)
+					((x < WORLDSIZEX) && (!_blocs[x+1 + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * z] || (_blocs[x+1 + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * z]->isTransparent() && !(*i)->isTransparent())) ? FRONT : 0)
 				| 
-					((y < WORLDSIZEY) && !_blocs[x + WORLDSIZEY * (y+1) + WORLDSIZEY * WORLDSIZEX * z] ? RIGHT : 0)
+					((y < WORLDSIZEY) && (!_blocs[x + WORLDSIZEY * (y+1) + WORLDSIZEY * WORLDSIZEX * z] || (_blocs[x + WORLDSIZEY * (y+1) + WORLDSIZEY * WORLDSIZEX * z]->isTransparent() && !(*i)->isTransparent())) ? RIGHT : 0)
 				| 
-					((z < WORLDSIZEZ) && !_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z+1)] ? TOP : 0)
+					((z < WORLDSIZEZ) && (!_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z+1)] || (_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z+1)]->isTransparent() && !(*i)->isTransparent())) ? TOP : 0)
+				|
+					(dynamic_cast<Water *>(*i) ? TRANSPARENT : 0)
 				);
 			if (((z < WORLDSIZEZ) && !_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z+1)]) && dynamic_cast<Dirt *>((*i)))
 			{
 				char vis = (*i)->getVisibility();
 				delete *i;
-				*i = new Grass(1.0f, vis);
-				(*i)->setTranslation(x, y, z);
+				*i = new Grass(vis);
 			}
 		}
 		++x;

@@ -11,7 +11,7 @@
 class Coal: public Cube
 {
 public:
-	Coal(GLfloat size = 1.0f, char visibility = 0);
+	Coal(unsigned char visibility = 0);
 	~Coal(){}
 	
 	virtual void display();

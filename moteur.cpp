@@ -70,7 +70,6 @@ void Moteur::start()
 
 
     glClearColor(0,0,0,0);
-    glDepthFunc(GL_LEQUAL); 
     glShadeModel(GL_SMOOTH);
 
 
@@ -81,10 +80,7 @@ void Moteur::start()
 
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-    // glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-
+    glDepthFunc(GL_LEQUAL); 
 
 
     glViewport(0,0, width, height);
@@ -109,11 +105,10 @@ void Moteur::start()
 
     glMultMatrixf(perspective);
 
-    // gluPerspective(angle, aspect, zNear, zFar);
 
     glMatrixMode(GL_MODELVIEW);
 
-
+    //boucle d'affichage
     while(!glfwWindowShouldClose(m_window))
     {
         
@@ -128,18 +123,19 @@ void Moteur::start()
             glVertex3i(-100, 100, -10);
 
         glEnd();
+
+        // _renderer->setActiveTex(Objet::m_texId[1]);
         // for (std::vector<Objet *>::iterator i = mot->m_listeObjet.begin(); i != mot->m_listeObjet.end(); ++i)
         // {
         //     (*i)->display();
         // }
+        // _renderer->display();
         _world->draw();
 
-        _renderer->display();
 
 
         mot->lumiere();
 
-        _renderer->clean();
 
         glfwSwapBuffers(m_window);
         glfwPollEvents();
@@ -236,25 +232,18 @@ void Moteur::keyboard_handler(GLFWwindow *, int key, int scancode, int action, i
         case GLFW_KEY_1: 
             if (action == GLFW_PRESS)
             {
-                mot->switch_blend();
-            }
-        break;
-
-        case GLFW_KEY_2: 
-            if (action == GLFW_PRESS)
-            {
                 mot->switch_light();
             }
         break;
 
-        case GLFW_KEY_3:
+        case GLFW_KEY_2:
             if (action == GLFW_PRESS)
             {
                 mot->switch_cullface();
             }
         break;
 
-        case GLFW_KEY_4:
+        case GLFW_KEY_3:
             if (action == GLFW_PRESS)
             {
                 mot->switch_wire();
@@ -288,20 +277,6 @@ void Moteur::switch_cullface()
         glEnable(GL_CULL_FACE);
     }
     light = !light;
-}
-
-void Moteur::switch_blend() 
-{
-    static bool blend = glIsEnabled(GL_BLEND);
-
-    if (blend) {
-        glDisable(GL_BLEND);              // Turn Blending Off
-        glEnable(GL_DEPTH_TEST);          // Turn Depth Testing On
-    } else {
-        glEnable(GL_BLEND);               // Turn Blending On
-        glDisable(GL_DEPTH_TEST);         // Turn Depth Testing Off
-    }
-    blend = !blend;
 }
 
 void Moteur::switch_wire()
@@ -367,9 +342,9 @@ void  Moteur::init_scene()
 
     // int maxI = 20, maxJ = 20, maxK = 10, r;
 
-    // Cube *c = new Stone(4.0f, 127);
+    // Cube *c = new Water(4.0f, 63);
     // m_listeObjet.push_back(c);
-    // c = new Grass(2.0f, 127);
+    // c = new Grass(2.0f, 63);
     // c->setTranslation(2.0f, -1.0f, 0.0f);
     // m_listeObjet.push_back(c);
     // Cube * c;

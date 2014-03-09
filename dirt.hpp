@@ -11,7 +11,7 @@
 class Dirt: public Cube
 {
 public:
-	Dirt(GLfloat size = 1.0f, char visibility = 0);
+	Dirt(unsigned char visibility = 0);
 	~Dirt(){}
 	
 	virtual void display();

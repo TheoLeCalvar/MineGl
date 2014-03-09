@@ -1,15 +1,13 @@
 #include "coal.hpp"
 
-Coal::Coal(GLfloat size, char visibility):
-Cube(size, visibility)
+Coal::Coal(unsigned char visibility):
+Cube(visibility)
 {
 
 }
 
 void Coal::display()
 {
-	_renderer->setTranslation(m_translation[0], m_translation[1], m_translation[2]);
-
 	if (_visibility & FRONT)
 	{
 		//face avant
@@ -49,7 +47,7 @@ void Coal::display()
 		_renderer->addVertexUV(_points + 12, COAL_UMAX, COAL_VMIN);
 	}
 
-	if (_visibility &  LEFT)
+	if (_visibility & LEFT)
 	{
 		//face gauche
 		_renderer->setNormal(0.0f, -1.0f, 0.0f);

@@ -4,6 +4,7 @@
 #define WORLDSIZEX 129
 #define WORLDSIZEY 129
 #define WORLDSIZEZ 64
+#define WATER_LEVEL 20
 
 #ifdef __APPLE__
 //gestion de la souris
@@ -22,6 +23,7 @@
 #include "stone.hpp"
 #include "coal.hpp"
 #include "dirt.hpp"
+#include "water.hpp"
 
 class World
 {

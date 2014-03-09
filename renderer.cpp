@@ -1,5 +1,6 @@
 #include "renderer.hpp"
 #include <string.h> //memcpy
+#include <iostream>
 
 
 Renderer * 	Renderer::_instance = NULL;
@@ -44,7 +45,17 @@ void 		Renderer::clean()
 
 }
 
-
+void 		Renderer::setBlending(bool b)
+{
+	if (b)
+	{
+		glEnable(GL_BLEND);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+	}
+}
 
 void 		Renderer::addVertex(GLfloat x, GLfloat y, GLfloat z)
 {
@@ -86,8 +97,6 @@ void 		Renderer::addVertex(GLfloat x, GLfloat y, GLfloat z)
 	}
 
 	_bufIndex += 8;
-
-
 }
 
 
@@ -117,6 +126,10 @@ void 		Renderer::setNormal(GLfloat x, GLfloat y, GLfloat z)
 	_normZ = z;
 }
 
+void 		Renderer::setActiveTex(GLuint id)
+{
+	glBindTexture(GL_TEXTURE_2D, id);
+}
 
 void 		Renderer::useNormals(bool b)
 {

@@ -11,7 +11,7 @@
 class Stone: public Cube
 {
 public:
-	Stone(GLfloat size = 1.0f, char visibility = 0);
+	Stone(unsigned char visibility = 0);
 	~Stone(){}
 	
 	virtual void display();

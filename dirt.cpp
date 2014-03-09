@@ -1,15 +1,14 @@
 #include "dirt.hpp"
 
 
-Dirt::Dirt(GLfloat size, char visibility):
-Cube(size, visibility)
+Dirt::Dirt(unsigned char visibility):
+Cube(visibility)
 {
 
 }
 
 void Dirt::display()
 {
-	_renderer->setTranslation(m_translation[0], m_translation[1], m_translation[2]);
 
 	if (_visibility & FRONT)
 	{

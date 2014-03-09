@@ -1,16 +1,14 @@
 #include "grass.hpp"
 
 
-Grass::Grass(GLfloat size, char visibility):
-Cube(size, visibility)
+Grass::Grass(unsigned char visibility):
+Cube(visibility)
 {
 
 }
 
 void Grass::display()
 {
-	_renderer->setTranslation(m_translation[0], m_translation[1], m_translation[2]);
-
 	if (_visibility & FRONT)
 	{
 		//face avant

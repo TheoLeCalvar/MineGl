@@ -1,7 +1,6 @@
 #ifndef OBJET_H
 #define OBJET_H 
 
-#include <SOIL/SOIL.h>
 #include "vect3D.hpp"
 #include "vect4D.hpp"
 #include "renderer.hpp"
@@ -18,8 +17,7 @@ class Objet
 protected:
   static Renderer *      _renderer;
 
-
-  static GLuint   m_texId;
+protected:
   Vect3D          m_translation;
   Vect3D          m_scale;
   Vect3D          m_rotation_axe;

@@ -50,6 +50,10 @@ public:
 	void 		addVertexUV(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
 	void 		addVertexUV(GLfloat * w, GLfloat u, GLfloat v);
 
+	void 		setActiveTex(GLuint id);
+
+	void 		setBlending(bool b);
+
 	void 		setNormal(GLfloat x, GLfloat y, GLfloat z);
 	void 		useNormals(bool);
 
