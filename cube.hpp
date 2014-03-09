@@ -38,7 +38,7 @@ public:
 	static  void setRenderer(Renderer * r){_renderer = r;}
 	static  void loadTexture();
 
-	bool isTransparent(){return (_visibility & TRANSPARENT) == TRANSPARENT;}
+	unsigned char isTransparent(){return (_visibility & TRANSPARENT);}
 	void setVisibility(char visibility){_visibility = visibility;}
 	void setVisibility(side s, bool b);
 	unsigned char getVisibility(){return _visibility;}

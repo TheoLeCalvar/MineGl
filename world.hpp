@@ -3,8 +3,8 @@
 
 #define WORLDSIZEX 129
 #define WORLDSIZEY 129
-#define WORLDSIZEZ 64
-#define WATER_LEVEL 20
+#define WORLDSIZEZ 128
+#define WATER_LEVEL 64
 
 #ifdef __APPLE__
 //gestion de la souris
@@ -30,6 +30,7 @@ class World
 private:
 	Renderer * 				_renderer;
 	std::vector<Cube *> 	_blocs;
+	GLuint 					_listId;
 
 public:
 	World(Renderer * renderer);

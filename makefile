@@ -36,8 +36,8 @@ clean:
 deploy: $(EXEC)
 	install_name_tool -change /usr/lib/libSystem.B.dylib @executable_path/lib/libSystem.B.dylib $(EXEC)
 	install_name_tool -change /usr/local/lib/libSOIL.dylib @executable_path/lib/libSOIL.dylib $(EXEC)
-	install_name_tool -change /usr/local/lib/libglfw3.3.0.dylib @executable_path/lib/libSystem.B.dylib $(EXEC)
+	install_name_tool -change /usr/local/lib/libglfw3.3.0.dylib @executable_path/lib/libglfw3.3.0.dylib $(EXEC)
 	install_name_tool -change /usr/lib/libc++.1.dylib @executable_path/lib/libc++.1.dylib $(EXEC)
 
 zip: deploy
-	zip out.zip $(EXEC) lib/* texture/textures.png
+	zip out.zip $(EXEC) lib/* texture/textures.png texture/water_still.png
