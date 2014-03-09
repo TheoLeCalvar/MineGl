@@ -91,7 +91,7 @@ void World::draw()
 
 void World::genHeight()
 {
-	float lissage = 0.5f;
+	float lissage = 0.4f;
 	float map[WORLDSIZEX * WORLDSIZEY];
 	int espace = WORLDSIZEX;
 	Cube * c;
@@ -203,15 +203,6 @@ void World::genHeight()
 	}
 
 
-	for (int i = 0; i < WORLDSIZEX; ++i)
-	{
-		for (int j = 0; j < WORLDSIZEY; ++j)
-		{
-			std::cout << map[i + j*WORLDSIZEX] << " ";
-		}
-		std::cout << std::endl;
-	}
-
 
 	for (int i = 0; i < WORLDSIZEX * WORLDSIZEY; ++i)
 	{
@@ -220,15 +211,6 @@ void World::genHeight()
 		map[i] = (map[i] < 0) ? 0 : map[i];
 	}
 
-
-	for (int i = 0; i < WORLDSIZEX; ++i)
-	{
-		for (int j = 0; j < WORLDSIZEY; ++j)
-		{
-			std::cout << map[i + j*WORLDSIZEX] << " ";
-		}
-		std::cout << std::endl;
-	}
 
 
 	_blocs.reserve(WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ);
@@ -270,7 +252,7 @@ void World::genHeight()
 		}
 	}
 
-	//remplacement des blocs d'air par de l'eau pour les blocs en dessous de 30
+	//remplacement des blocs d'air par de l'eau pour les blocs en dessous de WATER_LEVEL, voir water.hpp pour la valeur
 	for (int i = 0, x = 0, y = 0, z = 0; z <= WATER_LEVEL; ++i)
 	{
 		if (!_blocs[i])
@@ -279,10 +261,6 @@ void World::genHeight()
 			w->setPosition(x, y, z);
 			_blocs[i] = w;
 		}
-
-
-
-
 
 		++x;
 		if (x == WORLDSIZEX)
@@ -308,6 +286,7 @@ void World::calcVisibility()
 	{
 		if (*i)
 		{			
+			//une face est visible si elle n'est pas limite du monde, si le bloc au dessus/dessous/côté est un bloc d'air (NULL) ou transparent dans ce cas le bloc ne doit pas être transparent lui même
 			(*i)->setVisibility(
 					((x > 0) && (!_blocs[x-1 + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * z] || (_blocs[x-1 + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * z]->isTransparent() && !(*i)->isTransparent()))? BACK : 0)
 				|
