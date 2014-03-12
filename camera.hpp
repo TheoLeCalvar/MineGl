@@ -3,7 +3,10 @@
 
 #include "vect3D.hpp"
 
+
+#include <GLFW/glfw3.h>
 #ifdef __APPLE__
+	#include <ApplicationServices/ApplicationServices.h>
 	#include <OpenGL/gl.h>
 #else
 	#include <GL/gl.h>
@@ -12,8 +15,10 @@
 
 class Camera
 {
-friend class Moteur;
 private:
+	static Camera * 	_activeCamera;
+
+protected:
 	Vect3D 	 eye;
 	Vect3D   center;
 
@@ -34,14 +39,22 @@ private:
 	GLdouble vitesse;
 
 
-private:
+
+
+protected:
 	Camera(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ);
 	~Camera(){}
 
 	void 	move();
 	void 	go(GLdouble x, GLdouble y, GLdouble z);
 	void 	vectorFromAngle();
+
+public:
 	void 	display();
+
+public:
+	static void mouse_event(GLFWwindow *, double x, double y);
+	static void setActiveCamera(Camera * c){_activeCamera = c;}
 	
 };
 

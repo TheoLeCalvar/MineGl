@@ -1,15 +1,28 @@
 #include "water.hpp"
+#include <GLFW/glfw3.h>
+
+unsigned char Water::_frame = 0;
 
 Water::Water(unsigned char visibility):
-Cube(visibility), _frame(0)
+Cube(visibility)
 {
 
 }
 
+void Water::inc()
+{
+	static double time = glfwGetTime();
+
+	if (glfwGetTime() - time > 1.0f/30.0f)
+	{
+		_frame = (_frame + 1) % 64;
+		time = glfwGetTime();
+	}
+}
+
+
 void Water::display()
 {
-	_renderer->setTranslation(_x, _y, _z);
-
 	if (_visibility & FRONT)
 	{
 		//face avant
@@ -88,6 +101,4 @@ void Water::display()
 		_renderer->addVertexUV(_points + 6, 0.0f, (15 + 16*_frame) / 1024.0f);
 	}
 
-	_frame++;
-	_frame %= 64;
 }

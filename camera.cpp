@@ -1,6 +1,7 @@
 #include "camera.hpp"
 #include <cmath>
 
+Camera * Camera::_activeCamera = NULL;
 
 Camera::Camera( GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ):
     eye(eyeX, eyeY, eyeZ),
@@ -8,6 +9,10 @@ Camera::Camera( GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ):
     avant_presse(false), arriere_presse(false), gauche_presse(false), droite_presse(false), haut_presse(false), bas_presse(false),
     vitesse(0.30f)
 {
+    if (!_activeCamera)
+    {
+        _activeCamera = this;
+    }
     vectorFromAngle();
 }
 
@@ -47,6 +52,35 @@ void Camera::go(GLdouble x, GLdouble y, GLdouble z)
 {
     eye.set(x, y, z);
     center = eye + avant;
+}
+
+void Camera::mouse_event(GLFWwindow * w, double x, double y)
+{
+    int width, height;
+    glfwGetWindowSize(w, &width, &height);
+    width /= 2;
+    height /= 2;
+
+
+    if ((x - width != 0) ||  (y - height != 0))
+    {
+
+        _activeCamera->theta    -= (x - width)*0.2f;
+        _activeCamera->phi      -= (y - height)*0.2f;
+
+        _activeCamera->vectorFromAngle();
+
+        #ifdef __APPLE__    
+            int xpos, ypos;
+            glfwGetWindowPos(w, &xpos, &ypos);
+
+            CGPoint warpPoint = CGPointMake(width + xpos, height + ypos);
+            CGWarpMouseCursorPosition(warpPoint);
+            CGAssociateMouseAndMouseCursorPosition(true);
+        #else
+            glfwSetCursorPos (w, width, height);
+        #endif
+    }
 }
 
 void Camera::vectorFromAngle()

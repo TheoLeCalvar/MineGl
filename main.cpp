@@ -10,5 +10,7 @@ int main(int argc, char **argv)
 
 	m->start();
 
+	delete m;
+
 	return 0;
 }

@@ -4,44 +4,44 @@
 #include <iostream>
 
 
-Moteur   * Moteur::mot = NULL;
+Moteur   * Moteur::_mot = NULL;
 Renderer * Moteur::_renderer = NULL;
 
 Moteur * Moteur::create()
 {
-    if (mot)
+    if (_mot)
     {
         return NULL;
     }
-    mot = new Moteur();
+    _mot = new Moteur();
 
-    return mot;
+    return _mot;
 }
 
 Moteur::Moteur()
 {
     glfwInit();
 
-    m_window = glfwCreateWindow(800, 600, "OpenGL", NULL, NULL);
+    _window = glfwCreateWindow(800, 600, "OpenGL", NULL, NULL);
 
-    glfwMakeContextCurrent(m_window);
+    glfwMakeContextCurrent(_window);
 
 
 
     init_scene();
 
 
-    glfwSetKeyCallback(m_window, Moteur::keyboard_handler);
-    glfwSetCursorPosCallback(m_window, Moteur::mouse_event);
+    glfwSetKeyCallback(_window, Moteur::keyboard_handler);
+    glfwSetCursorPosCallback(_window, Camera::mouse_event);
 
 
-    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    glfwSetCursorPos (m_window, 400, 300);
+    glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetCursorPos (_window, 400, 300);
 }
 
 Moteur::~Moteur()
 {
-    mot = NULL;
+    _mot = NULL;
 }
 
 void showFrame()
@@ -66,7 +66,7 @@ void showFrame()
 void Moteur::start()
 {
     int width, height;
-    glfwGetWindowSize(mot->m_window, &width, &height);
+    glfwGetWindowSize(_window, &width, &height);
 
 
     glClearColor(0,0,0,0);
@@ -93,7 +93,7 @@ void Moteur::start()
     //remplacement de gluPerspective, deprecated
     GLfloat angle = 45.0f;
     GLfloat f = 1.0f / tan((angle * (M_PI/180.0f))/2.0f);
-    GLfloat zFar = 200.0f, zNear = 1.0f;
+    GLfloat zFar = 400.0f, zNear = 1.0f;
     GLfloat aspect = (GLdouble)width/(GLdouble)height;
     GLfloat perspective[] =
     {
@@ -109,10 +109,8 @@ void Moteur::start()
     glMatrixMode(GL_MODELVIEW);
 
     //boucle d'affichage
-    while(!glfwWindowShouldClose(m_window))
+    while(!glfwWindowShouldClose(_window))
     {
-        
-        mot->m_camera->display(); 
 
         glBegin(GL_QUADS);
 
@@ -134,16 +132,16 @@ void Moteur::start()
 
 
 
-        mot->lumiere();
+        lumiere();
 
 
-        glfwSwapBuffers(m_window);
+        glfwSwapBuffers(_window);
         glfwPollEvents();
 
         showFrame();
     }
 
-    glfwDestroyWindow(m_window);
+    glfwDestroyWindow(_window);
 
     glfwTerminate();
 
@@ -152,101 +150,54 @@ void Moteur::start()
     //     delete (*i);
     // }
     delete _world;
-    delete m_camera;
     _renderer->destroy();
 }
 
-void Moteur::mouse_event(GLFWwindow *, double x, double y)
-{
-    int width, height;
-    glfwGetWindowSize(mot->m_window, &width, &height);
-    width /= 2;
-    height /= 2;
 
 
-    if ((x - width != 0) ||  (y - height != 0))
-    {
-
-        mot->m_camera->theta    -= (x - width)*0.2f;
-        mot->m_camera->phi      -= (y - height)*0.2f;
-
-        mot->m_camera->vectorFromAngle();
-
-        #ifdef __APPLE__    
-            int xpos, ypos;
-            glfwGetWindowPos(mot->m_window, &xpos, &ypos);
-
-            CGPoint warpPoint = CGPointMake(width + xpos, height + ypos);
-            CGWarpMouseCursorPosition(warpPoint);
-            CGAssociateMouseAndMouseCursorPosition(true);
-        #else
-            glfwSetCursorPos (mot->m_window, width, height);
-        #endif
-    }
-}
-
-void Moteur::keyboard_handler(GLFWwindow *, int key, int scancode, int action, int mods)
+void Moteur::keyboard_handler(GLFWwindow * w, int key, int scancode, int action, int mods)
 {
     switch (key) {
-        case GLFW_KEY_LEFT:
+
         case GLFW_KEY_A:
-            mot->m_camera->gauche_presse = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
-        break;
-
-        case GLFW_KEY_UP:
         case GLFW_KEY_W:
-            mot->m_camera->avant_presse = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
-        break;
-
-        case GLFW_KEY_RIGHT:
         case GLFW_KEY_D:
-            mot->m_camera->droite_presse = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
-        break;
-
-        case GLFW_KEY_DOWN:
         case GLFW_KEY_S:
-            mot->m_camera->arriere_presse = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
-        break;
-
-        case GLFW_KEY_PAGE_UP:
         case GLFW_KEY_Q:
-            mot->m_camera->haut_presse  = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
-        break;
-
-        case GLFW_KEY_PAGE_DOWN:
         case GLFW_KEY_Z:
-            mot->m_camera->bas_presse = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
+        case GLFW_KEY_UP:
+        case GLFW_KEY_LEFT:
+        case GLFW_KEY_RIGHT:
+        case GLFW_KEY_DOWN:
+        case GLFW_KEY_PAGE_UP:
+        case GLFW_KEY_PAGE_DOWN:
+        case GLFW_KEY_SPACE:
+            _mot->_world->touche(key, scancode, action, mods);
         break;
 
         case GLFW_KEY_ESCAPE: 
-            glfwSetWindowShouldClose(mot->m_window, GL_TRUE);                 
+            glfwSetWindowShouldClose(_mot->_window, GL_TRUE);                 
         break; 
 
-        case GLFW_KEY_SPACE:
-            mot->m_camera->go(5,5,0);
-            mot->m_camera->phi = 0.0f;
-            mot->m_camera->theta = 180.0f;
-            mot->m_camera->vectorFromAngle();
-        break;
 
         case GLFW_KEY_1: 
             if (action == GLFW_PRESS)
             {
-                mot->switch_light();
+                _mot->switch_light();
             }
         break;
 
         case GLFW_KEY_2:
             if (action == GLFW_PRESS)
             {
-                mot->switch_cullface();
+                _mot->switch_cullface();
             }
         break;
 
         case GLFW_KEY_3:
             if (action == GLFW_PRESS)
             {
-                mot->switch_wire();
+                _mot->switch_wire();
             }
         break;
 
@@ -311,7 +262,7 @@ void Moteur::lumiere()
 
 
 
-    glEnable(GL_LIGHT1);
+    // glEnable(GL_LIGHT1);
 
 
     GLfloat lum_amb2[] = {0.2f, 0.2f, 0.2f, 1.0f};
@@ -328,14 +279,12 @@ void Moteur::lumiere()
 
 
 
-    glEnable(GL_LIGHT2);
+    // glEnable(GL_LIGHT2);
 }
 
 void  Moteur::init_scene()
 {
     _renderer = Renderer::create();
-    m_camera = new Camera(-20, -20, 80);
-
     _world = new World(_renderer);
 
 

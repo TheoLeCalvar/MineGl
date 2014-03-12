@@ -1,8 +1,11 @@
 #include "world.hpp"
+#include "player.hpp"
 
 #include <cstdlib> //rand
 #include <cmath>
 #include <iostream>
+
+
 
 
 
@@ -11,6 +14,7 @@ _renderer(renderer), _listId(0)
 {
 	Cube::setRenderer(_renderer);
 	Cube::loadTexture();
+	_player = new Player();
 
 	
 	_blocs.reserve(WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ);
@@ -35,12 +39,98 @@ World::~World()
 	}
 }
 
+void World::touche(int key, int scancode, int action, int mods)
+{
+	_player->toucheJoueur(key, scancode, action, mods);
+}
 
 void World::draw()
 {	
+	_player->display();
+
+
+	//soleil
+	glPushMatrix();
+		GLfloat alpha = fmod(glfwGetTime()*2, 360);
+		glRotatef(alpha, 1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 200.0f, 0.0f);
+
+		// glBegin(GL_QUADS);
+		// 	glVertex3f(-0.5f, 0.5f, 0.0f);
+		// 	glVertex3f(-0.5f, -0.5f, 0.0f);
+		// 	glVertex3f(0.5f, -0.5f, 0.0f);
+		// 	glVertex3f(0.5f, 0.5f, 0.0f);
+		// glEnd();
+
+		// if (alpha < 180)
+		// {
+		// 	double sinus = sin(alpha * M_PI/360.0f), cosinus = cos(alpha * M_PI/360.0f)/10.0f;
+
+		// 	GLfloat lum_amb[] = {sinus*0.2f + cosinus, sinus*0.2f, sinus*0.2f, 1.0f};
+		// 	GLfloat lum_pos[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		// 	GLfloat lum_dif[] = {sinus*0.7f + cosinus, sinus*0.7f, sinus*0.7f, 1.0f};
+
+		// 	glLightfv(GL_LIGHT3, GL_POSITION, lum_pos);
+		// 	glLightfv(GL_LIGHT3, GL_AMBIENT , lum_amb);
+		// 	glLightfv(GL_LIGHT3, GL_DIFFUSE, lum_dif);
+		// 	glLightfv(GL_LIGHT3, GL_SPECULAR, lum_dif);
+
+		// 	glEnable(GL_LIGHT3);
+		// }
+		// else
+		// {
+		// 	GLfloat lum_amb[] = {0.2f, 0.2f, 0.3f, 1.0f};
+		// 	GLfloat lum_pos[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		// 	GLfloat lum_dif[] = {0.2f, 0.2f, 0.4f, 1.0f};
+
+		// 	glLightfv(GL_LIGHT3, GL_POSITION, lum_pos);
+		// 	glLightfv(GL_LIGHT3, GL_AMBIENT , lum_amb);
+		// 	glLightfv(GL_LIGHT3, GL_DIFFUSE, lum_dif);
+		// 	glLightfv(GL_LIGHT3, GL_SPECULAR, lum_dif);
+
+		// 	glEnable(GL_LIGHT3);
+		// }
+
+		GLfloat lum_amb[] = {0.4f, 0.4f, 0.4f, 1.0f};
+		GLfloat lum_pos[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		GLfloat lum_dif[] = {0.6f, 0.6f, 0.6f, 1.0f};
+
+		glLightfv(GL_LIGHT3, GL_POSITION, lum_pos);
+		glLightfv(GL_LIGHT3, GL_AMBIENT , lum_amb);
+		glLightfv(GL_LIGHT3, GL_DIFFUSE, lum_dif);
+		glLightfv(GL_LIGHT3, GL_SPECULAR, lum_dif);
+
+		glEnable(GL_LIGHT3);
+
+
+
+
+	glPopMatrix();
+
+
+	static std::vector<int> v;
+
+	//affiche les blocs du monde
 	if (_listId)
 	{
 		glCallList(_listId);
+
+
+		//affichage des blocs transparents trouvés lors du premier parcours du monde
+		_renderer->clean();
+		_renderer->setActiveTex(Cube::_texId[1]);
+		_renderer->setBlending(true);
+
+
+		for (std::vector<int>::iterator i = v.begin(); i != v.end(); ++i)
+		{
+			_renderer->setTranslation((*i)%WORLDSIZEX,((*i)/WORLDSIZEX)%WORLDSIZEY,  (*i)/(WORLDSIZEX*WORLDSIZEY));
+			_blocs[*i]->display();
+		}
+
+		_renderer->display();
+
+		Water::inc();
 	}
 	else
 	{
@@ -48,9 +138,11 @@ void World::draw()
 
 		glNewList(_listId, GL_COMPILE_AND_EXECUTE);
 
-			std::vector<Cube *> v;
+
 
 			//parcour du monde, affichage des blocs non transparents, stockage des blocs transparent dans un vector temporaire pour un affichage plus tard
+
+			v.clear();
 			_renderer->clean();
 			_renderer->setActiveTex(Cube::_texId[0]);
 			_renderer->setBlending(false);
@@ -61,7 +153,7 @@ void World::draw()
 				{
 					if (_blocs[i]->isTransparent())
 					{
-						v.push_back(_blocs[i]);
+						v.push_back(i);
 					}
 					else
 					{	
@@ -86,17 +178,7 @@ void World::draw()
 
 			_renderer->display();
 			
-			//affichage des blocs transparents trouvés lors du premier parcours du monde
-			_renderer->clean();
-			_renderer->setActiveTex(Cube::_texId[1]);
-			_renderer->setBlending(true);
 
-			for (std::vector<Cube *>::iterator i = v.begin(); i != v.end(); ++i)
-			{
-				(*i)->display();
-			}
-
-			_renderer->display();
 
 		glEndList();
 
@@ -107,7 +189,7 @@ void World::draw()
 
 void World::genHeight()
 {
-	float lissage = 0.4f;
+	float lissage = 0.35f;
 	float map[WORLDSIZEX * WORLDSIZEY];
 	int espace = WORLDSIZEX;
 	Cube * c;
@@ -273,9 +355,7 @@ void World::genHeight()
 	{
 		if (!_blocs[i])
 		{
-			Water *w = new Water(127);
-			w->setPosition(x, y, z);
-			_blocs[i] = w;
+			_blocs[i] = new Water(127);
 		}
 
 		++x;
@@ -290,7 +370,6 @@ void World::genHeight()
 			y = 0;
 		}
 	}
-
 }
 
 void World::calcVisibility()

@@ -1,10 +1,12 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#define WORLDSIZEX 129
-#define WORLDSIZEY 129
+#define WORLDSIZEX 257
+#define WORLDSIZEY 257
 #define WORLDSIZEZ 128
-#define WATER_LEVEL 64
+#define WATER_LEVEL 50
+
+class Player;
 
 #ifdef __APPLE__
 //gestion de la souris
@@ -15,6 +17,7 @@
 	#include <GL/glu.h>
 #endif
 
+#include <GLFW/glfw3.h>
 #include <vector>
 #include "renderer.hpp"
 #include "cube.hpp"
@@ -32,16 +35,18 @@ private:
 	std::vector<Cube *> 	_blocs;
 	GLuint 					_listId;
 
+	Player * 				_player;
+
 public:
 	World(Renderer * renderer);
 	~World();
 
-	void draw();
+	void 	draw();
+	void 	touche(int key, int scancode, int action, int mods);
 
 private:
 	void 	genHeight();
 	void 	calcVisibility();
-	
 };
 
 

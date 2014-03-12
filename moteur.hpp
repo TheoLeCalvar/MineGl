@@ -18,9 +18,9 @@
 #include <vector>
 #include "objet.hpp"
 #include "vect3D.hpp"
-#include "camera.hpp"
 #include "renderer.hpp"
 #include "world.hpp"
+#include "camera.hpp"
 
 
 
@@ -35,12 +35,11 @@
 class Moteur
 {
 private:
-	static Moteur 	* 		mot;
+	static Moteur 	* 		_mot;
 	static Renderer * 		_renderer;
 
 	// std::vector<Objet *> 	m_listeObjet;
-	Camera * 			 	m_camera;
-	GLFWwindow* 			m_window;
+	GLFWwindow* 			_window;
 	World * 				_world;
 
 
@@ -57,7 +56,6 @@ public:
 	void 		switch_wire();
 
 	static void keyboard_handler(GLFWwindow *, int key, int scancode, int action, int mods);
-	static void mouse_event(GLFWwindow *, double x, double y);
 
 
 
