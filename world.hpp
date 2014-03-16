@@ -1,10 +1,13 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#define WORLDSIZEX 257
-#define WORLDSIZEY 257
+#define WORLDSIZEX 129
+#define WORLDSIZEY 129
 #define WORLDSIZEZ 128
 #define WATER_LEVEL 50
+
+#define XYZ(x, y, z) ((x) + (WORLDSIZEX * (y)) + (WORLDSIZEY * WORLDSIZEX * (z)))
+#define XY(x, y) ((x) + ((y) * WORLDSIZEX))
 
 class Player;
 
@@ -31,22 +34,27 @@ class Player;
 class World
 {
 private:
-	Renderer * 				_renderer;
-	std::vector<Cube *> 	_blocs;
-	GLuint 					_listId;
+	Renderer * 					_renderer;
+	std::vector<Cube *> 		_blocs;
+	std::vector<unsigned int> 	_height;
 
-	Player * 				_player;
+	//passer par un chunk pour découper le monde en plus petites listes d'affichage 
+	GLuint 						_listId;
+
+
+	Player * 					_player;
 
 public:
 	World(Renderer * renderer);
 	~World();
 
-	void 	draw();
-	void 	touche(int key, int scancode, int action, int mods);
+	void 			draw();
+	void 			touche(int key, int scancode, int action, int mods);
+	unsigned int	hauteur(int x, int y);
 
 private:
-	void 	genHeight();
-	void 	calcVisibility();
+	void 			genHeight();
+	void 			calcVisibility();
 };
 
 

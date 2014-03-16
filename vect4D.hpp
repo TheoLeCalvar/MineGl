@@ -102,7 +102,7 @@ public:
 		return (res);	
 	}
 
-	T	operator[](int i)
+	T &	operator[](int i)
 	{
 		return a[i];
 	}

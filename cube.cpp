@@ -17,6 +17,27 @@ GLfloat Cube::_points[] =
 	-0.5f, 	0.5f, 	0.5f,	//7 - 21
 };
 
+// GLfloat Cube::_normals[] =
+// {
+// 	0.57735f, -0.57735f, 0.57735f,
+// 	0.57735f, -0.57735f, -0.57735f,
+// 	0.57735f, 0.57735f, -0.57735f, 
+// 	0.57735f, 0.57735f, 0.57735f
+// 	-0.57735f, -0.57735f, 0.57735f,
+// 	-0.57735f, -0.57735f, -0.57735f,
+// 	-0.57735f, 0.57735f, -0.57735f,
+// 	-0.57735f, 0.57735f, 0.57735f
+// };
+
+GLfloat Cube::_normals[] =
+{
+	1.0f, 0.0f, 0.0f,
+	0.0f, 1.0f, 0.0f,
+	-1.0f, 0.0f, 0.0f,
+	0.0f, -1.0f, 0.0f,
+	0.0f, 0.0f, 1.0f, 
+	0.0f, 0.0f, -1.0f 
+};
 
 Cube::Cube(unsigned char visibility):
 _visibility(visibility)
@@ -26,25 +47,25 @@ _visibility(visibility)
 void Cube::loadTexture()
 {
 	int width = 64, height = 64;
-	unsigned char  * m_image;
+	unsigned char  * image;
 
 	glActiveTexture(GL_TEXTURE0);
-	m_image = SOIL_load_image("texture/textures.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	image = SOIL_load_image("texture/textures.png", &width, &height, 0, SOIL_LOAD_RGBA);
 	glGenTextures(2, _texId);
 	glBindTexture(GL_TEXTURE_2D, _texId[0]);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	SOIL_free_image_data(m_image);
+	SOIL_free_image_data(image);
 
 	width = 16;
 	height = 1024;
-	m_image = SOIL_load_image("texture/water_still.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	image = SOIL_load_image("texture/water_still.png", &width, &height, 0, SOIL_LOAD_RGBA);
 	glBindTexture(GL_TEXTURE_2D, _texId[1]);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_image);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	SOIL_free_image_data(m_image);
+	SOIL_free_image_data(image);
 }
 
 void Cube::display()
@@ -52,7 +73,7 @@ void Cube::display()
 	if (_visibility & FRONT)
 	{
 		//face avant
-		_renderer->setNormal(1.0f, 0.0f, 0.0f);
+		_renderer->setNormal(_normals);
 		_renderer->addVertex(_points);
 		_renderer->addVertex(_points + 3);
 		_renderer->addVertex(_points + 6);
@@ -65,10 +86,11 @@ void Cube::display()
 	if (_visibility & RIGHT)
 	{
 		//face droite
-		_renderer->setNormal(0.0f, 1.0f, 0.0f);
+		_renderer->setNormal(_normals + 3);
 		_renderer->addVertex(_points + 9);
 		_renderer->addVertex(_points + 6);
 		_renderer->addVertex(_points + 18);
+
 
 		_renderer->addVertex(_points + 9);
 		_renderer->addVertex(_points + 18);
@@ -78,7 +100,7 @@ void Cube::display()
 	if (_visibility & BACK)
 	{
 		//face arriere
-		_renderer->setNormal(-1.0f, 0.0f, 0.0f);
+		_renderer->setNormal(_normals + 6);
 		_renderer->addVertex(_points + 21);
 		_renderer->addVertex(_points + 18);
 		_renderer->addVertex(_points + 15);
@@ -91,7 +113,7 @@ void Cube::display()
 	if (_visibility & LEFT)
 	{
 		//face gauche
-		_renderer->setNormal(0.0f, -1.0f, 0.0f);
+		_renderer->setNormal(_normals + 9);
 		_renderer->addVertex(_points + 12);
 		_renderer->addVertex(_points + 15);
 		_renderer->addVertex(_points + 3);
@@ -104,7 +126,7 @@ void Cube::display()
 	if (_visibility & TOP)
 	{
 		//face haute
-		_renderer->setNormal(0.0f, 0.0f, 1.0f);
+		_renderer->setNormal(_normals + 12);
 		_renderer->addVertex(_points);
 		_renderer->addVertex(_points + 9);
 		_renderer->addVertex(_points + 21);
@@ -117,7 +139,7 @@ void Cube::display()
 	if (_visibility & BACK)
 	{
 		//face basse
-		_renderer->setNormal(0.0f, 0.0f, -1.0f);
+		_renderer->setNormal(_normals + 15);
 		_renderer->addVertex(_points + 3);
 		_renderer->addVertex(_points + 15);
 		_renderer->addVertex(_points + 18);

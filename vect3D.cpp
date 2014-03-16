@@ -86,7 +86,6 @@ Vect3D Vect3D::operator*(GLdouble t) {
 	return (res);
 }
 
-
 Vect3D Vect3D::operator/(GLdouble t) {
 
 	Vect3D res;
@@ -98,10 +97,9 @@ Vect3D Vect3D::operator/(GLdouble t) {
 	return (res);
 }
 
-GLdouble Vect3D::operator[](int i){
+GLdouble & Vect3D::operator[](int i){
 	return a[i];
 }
-
 
 GLdouble Vect3D::length() 
 {

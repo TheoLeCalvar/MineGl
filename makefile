@@ -6,7 +6,7 @@ EXEC = exe
 UNAME = $(shell uname)
 
 ifeq ($(UNAME), Darwin)
-CXXFLAGS = -Wall  -g
+CXXFLAGS = -Wall -Wextra -g
 LDFLAGS = -framework OpenGL -framework ApplicationServices -lSOIL -L/usr/local/lib -lglfw3
 endif
 

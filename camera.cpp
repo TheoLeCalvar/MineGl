@@ -4,10 +4,10 @@
 Camera * Camera::_activeCamera = NULL;
 
 Camera::Camera( GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ):
-    eye(eyeX, eyeY, eyeZ),
-    phi(0), theta(0), haut(0,0,1), 
-    avant_presse(false), arriere_presse(false), gauche_presse(false), droite_presse(false), haut_presse(false), bas_presse(false),
-    vitesse(0.30f)
+    _eye(eyeX, eyeY, eyeZ),
+    _phi(0), _theta(0), _haut(0,0,1), 
+    _avant_presse(false), _arriere_presse(false), _gauche_presse(false), _droite_presse(false), _haut_presse(false), _bas_presse(false),
+    _vitesse(0.30f)
 {
     if (!_activeCamera)
     {
@@ -19,39 +19,39 @@ Camera::Camera( GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ):
 void Camera::move()
 {
 
-    if (avant_presse)
+    if (_avant_presse)
     {
-        eye = eye + avant * vitesse;
+        _eye = _eye + _avant * _vitesse;
     }
-    if (gauche_presse)
+    if (_gauche_presse)
     {
-        eye = eye + gauche * vitesse;
+        _eye = _eye + _gauche * _vitesse;
     }
-    if (arriere_presse)
+    if (_arriere_presse)
     {
-        eye = eye - avant * vitesse;
+        _eye = _eye - _avant * _vitesse;
     }
-    if (droite_presse)
+    if (_droite_presse)
     {
-        eye = eye - gauche * vitesse;
+        _eye = _eye - _gauche * _vitesse;
     }
-    if (haut_presse)
+    if (_haut_presse)
     {
-        eye = eye + haut * vitesse;
+        _eye = _eye + _haut * _vitesse;
     }
-    if (bas_presse)
+    if (_bas_presse)
     {
-        eye = eye - haut * vitesse;
+        _eye = _eye - _haut * _vitesse;
     }
 
 
-    center = eye + avant;
+    _center = _eye + _avant;
 }
 
 void Camera::go(GLdouble x, GLdouble y, GLdouble z)
 {
-    eye.set(x, y, z);
-    center = eye + avant;
+    _eye.set(x, y, z);
+    _center = _eye + _avant;
 }
 
 void Camera::mouse_event(GLFWwindow * w, double x, double y)
@@ -65,8 +65,8 @@ void Camera::mouse_event(GLFWwindow * w, double x, double y)
     if ((x - width != 0) ||  (y - height != 0))
     {
 
-        _activeCamera->theta    -= (x - width)*0.2f;
-        _activeCamera->phi      -= (y - height)*0.2f;
+        _activeCamera->_theta    -= (x - width)*0.2f;
+        _activeCamera->_phi      -= (y - height)*0.2f;
 
         _activeCamera->vectorFromAngle();
 
@@ -87,26 +87,26 @@ void Camera::vectorFromAngle()
 {
     static Vect3D up(0.0f,0.0f,1.0f);
 
-    if (phi > 89)
+    if (_phi > 89.0f)
     {
-        phi = 89.0f;
+        _phi = 89.0f;
     }
-    else if (phi < -89)
+    else if (_phi < -89.0f)
     {
-        phi = -89;
+        _phi = -89.0f;
     }
 
 
-    double tmp = cos(phi * M_PI/180);
+    double tmp = cos(_phi * M_PI/180);
 
 
-    avant.set(tmp * cos(theta * M_PI/180), tmp * sin(theta * M_PI/180), sin(phi * M_PI/180));
-    avant.normalize();
+    _avant.set(tmp * cos(_theta * M_PI/180), tmp * sin(_theta * M_PI/180), sin(_phi * M_PI/180));
+    _avant.normalize();
 
-    gauche = up * avant;
-    gauche.normalize();
+    _gauche = up * _avant;
+    _gauche.normalize();
 
-    center = eye + avant;
+    _center = _eye + _avant;
 }
 
 void Camera::display()
@@ -118,17 +118,17 @@ void Camera::display()
 
 
     //calcul de la matrice de gluLookAt (deprecated)
-    Vect3D up = -gauche * avant;
+    Vect3D up = -_gauche * _avant;
 
     GLfloat M[] =
     {
-        -gauche[0], up[0], -avant[0], 0.0f,
-        -gauche[1], up[1], -avant[1], 0.0f,
-        -gauche[2], up[2], -avant[2], 0.0f,
-        0.0f, 0.0f, 0.0f,  1.0f
+        -_gauche[0], up[0], -_avant[0], 0.0f,
+        -_gauche[1], up[1], -_avant[1], 0.0f,
+        -_gauche[2], up[2], -_avant[2], 0.0f,
+        0.0f,       0.0f,   0.0f,      1.0f
     };
 
     glMultMatrixf(M);
-    glTranslated(-eye[0], -eye[1], -eye[2]);
+    glTranslated(-_eye[0], -_eye[1], -_eye[2]);
 
 }

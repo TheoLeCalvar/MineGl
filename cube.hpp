@@ -1,6 +1,6 @@
 #ifndef CUBE_H
 #define CUBE_H
-
+ 
 #include "renderer.hpp"
 #include <SOIL/SOIL.h>
 

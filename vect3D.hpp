@@ -27,7 +27,7 @@ public:
 	Vect3D 	operator*(Vect3D v);
 	Vect3D 	operator*(GLdouble t);
 	Vect3D 	operator/(GLdouble t);
-	GLdouble	operator[](int i);
+	GLdouble &	operator[](int i);
 
 	GLdouble length();
 	void 	normalize();

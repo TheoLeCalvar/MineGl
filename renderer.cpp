@@ -126,6 +126,13 @@ void 		Renderer::setNormal(GLfloat x, GLfloat y, GLfloat z)
 	_normZ = z;
 }
 
+void 		Renderer::setNormal(GLfloat *v)
+{
+	_normX = v[0];
+	_normY = v[1];
+	_normZ = v[2];
+}
+
 void 		Renderer::setActiveTex(GLuint id)
 {
 	glBindTexture(GL_TEXTURE_2D, id);

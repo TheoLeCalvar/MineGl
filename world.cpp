@@ -14,10 +14,11 @@ _renderer(renderer), _listId(0)
 {
 	Cube::setRenderer(_renderer);
 	Cube::loadTexture();
-	_player = new Player();
+	_player = new Player(this);
 
 	
 	_blocs.reserve(WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ);
+	_height.reserve(WORLDSIZEX * WORLDSIZEY);
 
 
 	genHeight();
@@ -37,6 +38,7 @@ World::~World()
 			delete *i;
 		}
 	}
+	delete _player;
 }
 
 void World::touche(int key, int scancode, int action, int mods)
@@ -48,65 +50,57 @@ void World::draw()
 {	
 	_player->display();
 
-
-	//soleil
+		//soleil
 	glPushMatrix();
-		GLfloat alpha = fmod(glfwGetTime()*2, 360);
-		glRotatef(alpha, 1.0f, 0.0f, 0.0f);
-		glTranslatef(0.0f, 200.0f, 0.0f);
+		// GLfloat alpha = fmod(glfwGetTime()*10, 360);
+		// glRotatef(alpha, 1.0f, 0.0f, 0.0f);
+		// glTranslatef(_player->getPositionX(), _player->getPositionY() + 200.0f, _player->getPositionZ());
 
-		// glBegin(GL_QUADS);
-		// 	glVertex3f(-0.5f, 0.5f, 0.0f);
-		// 	glVertex3f(-0.5f, -0.5f, 0.0f);
-		// 	glVertex3f(0.5f, -0.5f, 0.0f);
-		// 	glVertex3f(0.5f, 0.5f, 0.0f);
-		// glEnd();
 
 		// if (alpha < 180)
 		// {
 		// 	double sinus = sin(alpha * M_PI/360.0f), cosinus = cos(alpha * M_PI/360.0f)/10.0f;
 
 		// 	GLfloat lum_amb[] = {sinus*0.2f + cosinus, sinus*0.2f, sinus*0.2f, 1.0f};
-		// 	GLfloat lum_pos[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		// 	GLfloat lum_pos[] = {0.0f, 1.0f, 0.0f, 0.0f};
 		// 	GLfloat lum_dif[] = {sinus*0.7f + cosinus, sinus*0.7f, sinus*0.7f, 1.0f};
 
-		// 	glLightfv(GL_LIGHT3, GL_POSITION, lum_pos);
-		// 	glLightfv(GL_LIGHT3, GL_AMBIENT , lum_amb);
-		// 	glLightfv(GL_LIGHT3, GL_DIFFUSE, lum_dif);
-		// 	glLightfv(GL_LIGHT3, GL_SPECULAR, lum_dif);
+		// 	glLightfv(GL_LIGHT1, GL_POSITION, lum_pos);
+		// 	glLightfv(GL_LIGHT1, GL_AMBIENT , lum_amb);
+		// 	glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_dif);
+		// 	glLightfv(GL_LIGHT1, GL_SPECULAR, lum_dif);
 
-		// 	glEnable(GL_LIGHT3);
+		// 	glEnable(GL_LIGHT1);
 		// }
 		// else
 		// {
 		// 	GLfloat lum_amb[] = {0.2f, 0.2f, 0.3f, 1.0f};
-		// 	GLfloat lum_pos[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		// 	GLfloat lum_pos[] = {0.0f, -1.0f, 0.0f, 0.0f};
 		// 	GLfloat lum_dif[] = {0.2f, 0.2f, 0.4f, 1.0f};
 
-		// 	glLightfv(GL_LIGHT3, GL_POSITION, lum_pos);
-		// 	glLightfv(GL_LIGHT3, GL_AMBIENT , lum_amb);
-		// 	glLightfv(GL_LIGHT3, GL_DIFFUSE, lum_dif);
-		// 	glLightfv(GL_LIGHT3, GL_SPECULAR, lum_dif);
+		// 	glLightfv(GL_LIGHT1, GL_POSITION, lum_pos);
+		// 	glLightfv(GL_LIGHT1, GL_AMBIENT , lum_amb);
+		// 	glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_dif);
+		// 	glLightfv(GL_LIGHT1, GL_SPECULAR, lum_dif);
 
-		// 	glEnable(GL_LIGHT3);
+		// 	glEnable(GL_LIGHT1);
 		// }
 
 		GLfloat lum_amb[] = {0.4f, 0.4f, 0.4f, 1.0f};
-		GLfloat lum_pos[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		GLfloat lum_pos[] = {0.0f, 0.0f, 1.0f, 0.0f};
 		GLfloat lum_dif[] = {0.6f, 0.6f, 0.6f, 1.0f};
 
-		glLightfv(GL_LIGHT3, GL_POSITION, lum_pos);
-		glLightfv(GL_LIGHT3, GL_AMBIENT , lum_amb);
-		glLightfv(GL_LIGHT3, GL_DIFFUSE, lum_dif);
-		glLightfv(GL_LIGHT3, GL_SPECULAR, lum_dif);
+		glLightfv(GL_LIGHT1, GL_POSITION, lum_pos);
+		glLightfv(GL_LIGHT1, GL_AMBIENT , lum_amb);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_dif);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, lum_dif);
 
-		glEnable(GL_LIGHT3);
+		glEnable(GL_LIGHT1);
 
 
 
 
 	glPopMatrix();
-
 
 	static std::vector<int> v;
 
@@ -114,23 +108,6 @@ void World::draw()
 	if (_listId)
 	{
 		glCallList(_listId);
-
-
-		//affichage des blocs transparents trouvés lors du premier parcours du monde
-		_renderer->clean();
-		_renderer->setActiveTex(Cube::_texId[1]);
-		_renderer->setBlending(true);
-
-
-		for (std::vector<int>::iterator i = v.begin(); i != v.end(); ++i)
-		{
-			_renderer->setTranslation((*i)%WORLDSIZEX,((*i)/WORLDSIZEX)%WORLDSIZEY,  (*i)/(WORLDSIZEX*WORLDSIZEY));
-			_blocs[*i]->display();
-		}
-
-		_renderer->display();
-
-		Water::inc();
 	}
 	else
 	{
@@ -178,12 +155,27 @@ void World::draw()
 
 			_renderer->display();
 			
-
-
 		glEndList();
 
 	}
-	
+
+		//affichage des blocs transparents trouvés lors du premier parcours du monde
+	_renderer->clean();
+	_renderer->setActiveTex(Cube::_texId[1]);
+	_renderer->setBlending(true);
+
+
+	for (std::vector<int>::iterator i = v.begin(); i != v.end(); ++i)
+	{
+		_renderer->setTranslation((*i)%WORLDSIZEX,((*i)/WORLDSIZEX)%WORLDSIZEY,  (*i)/(WORLDSIZEX*WORLDSIZEY));
+		_blocs[*i]->display();
+	}
+
+	_renderer->display();
+
+	Water::inc();
+
+
 
 }
 
@@ -193,6 +185,8 @@ void World::genHeight()
 	float map[WORLDSIZEX * WORLDSIZEY];
 	int espace = WORLDSIZEX;
 	Cube * c;
+
+
 
 
 	for (int i = 0; i < WORLDSIZEX * WORLDSIZEY; ++i)
@@ -207,7 +201,7 @@ void World::genHeight()
 	map[(WORLDSIZEX*WORLDSIZEY)-1] 	= WORLDSIZEZ / 2;
 
 
-
+//TODO garder la map de hauteur pour la réutiliser 
 	//génération de la hauteur du monde, algorithme squareDiamond, inspiré de http://hiko-seijuro.developpez.com/articles/diamond-square/
 	while (espace > 1)
 	{
@@ -224,30 +218,29 @@ void World::genHeight()
 				
 				if((x-demiEspace >= 0) && (y-demiEspace >= 0))
 				{
-					somme += map[x-demiEspace + (y-demiEspace)*WORLDSIZEX];
+					somme += map[XY(x-demiEspace, y-demiEspace)];
 					n++;
 				}
 
 				if ((x-demiEspace >= 0) && (y+demiEspace < WORLDSIZEY))
 				{
-					somme += map[x-demiEspace + (y+demiEspace)*WORLDSIZEX];
+					somme += map[XY(x-demiEspace, y+demiEspace)];
 					n++;
 				}
 				
 				if ((x+demiEspace < WORLDSIZEX) && (y+demiEspace < WORLDSIZEY))
 				{
-					somme += map[x+demiEspace + (y+demiEspace)*WORLDSIZEX];
+					somme += map[XY(x+demiEspace, y+demiEspace)];
 					n++;
 				}
 				
 				if ((x+demiEspace < WORLDSIZEX) && (y-demiEspace >= 0))
 				{
-					somme += map[x+demiEspace + (y-demiEspace)*WORLDSIZEX];
+					somme += map[XY(x+demiEspace, y-demiEspace)];
 					n++;
 				}
 
-
-				map[x + y*WORLDSIZEX] = somme/n + (((double)rand()/RAND_MAX)*2 - 1) * demiEspace * lissage;
+				map[XY(x,y)] = somme/n + (((double)rand()/RAND_MAX)*2 - 1) * demiEspace * lissage;
 			}
 		}
 
@@ -270,30 +263,29 @@ void World::genHeight()
 				
 				if(x-demiEspace >= 0)
 				{
-					somme += map[x-demiEspace + y * WORLDSIZEX];
+					somme += map[XY(x-demiEspace, y)];
 					n++;
 				}
 
 				if (y+demiEspace < WORLDSIZEY)
 				{
-					somme += map[x + (y+demiEspace)*WORLDSIZEX];
+					somme += map[XY(x, y+demiEspace)];
 					n++;
 				}
 				
 				if (x+demiEspace < WORLDSIZEX)
 				{
-					somme += map[x+demiEspace + (y)*WORLDSIZEX];
+					somme += map[XY(x+demiEspace, y)];
 					n++;
 				}
 				
 				if (y-demiEspace >= 0)
 				{
-					somme += map[x + (y-demiEspace)*WORLDSIZEX];
+					somme += map[XY(x, y-demiEspace)];
 					n++;
 				}
 
-
-				map[x + y*WORLDSIZEX] = somme/n + (((double)rand()/RAND_MAX)*2 - 1) * demiEspace * lissage;
+				map[XY(x,y)] = somme/n + (((double)rand()/RAND_MAX)*2 - 1) * demiEspace * lissage;
 			}
 		}
 
@@ -301,25 +293,31 @@ void World::genHeight()
 	}
 
 
-
 	for (int i = 0; i < WORLDSIZEX * WORLDSIZEY; ++i)
 	{
 		map[i] = round(map[i]);
-		map[i] = (map[i] > WORLDSIZEZ) ? WORLDSIZEZ : map[i];
-		map[i] = (map[i] < 0) ? 0 : map[i];
-	}
 
+		if (map[i] > WORLDSIZEZ)
+		{
+			map[i] = WORLDSIZEZ;
+		}
+		else if (map[i] < 0)
+		{
+			map[i] = 0;
+		}
+		_height.push_back(map[i]);
+	}
 
 
 	_blocs.reserve(WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ);
 	//remplissage du monde en utilisant la map calculée précédément, les blocs de [0, map[x, y]-2] = (Stone 75%, Coal 25%), [map-1, map] = (Dirt, Grass si le bloc du dessus est vide)	
 	for (int i = 0, x = 0, y = 0, z = 0; i < WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ; ++i)
 	{
-		if ((z == map[x + y * WORLDSIZEX]-1) || (z == map[x + y * WORLDSIZEX]))
+		if ((z == map[XY(x, y)]-1) || (z == map[XY(x,y)]))
 		{
 			c = new Dirt(63);
 		}
-		else if (z < map[x + y * WORLDSIZEX])
+		else if (z < map[XY(x, y)])
 		{
 			if (rand()%4)
 			{
@@ -383,21 +381,21 @@ void World::calcVisibility()
 		{			
 			//une face est visible si elle n'est pas limite du monde, si le bloc au dessus/dessous/côté est un bloc d'air (NULL) ou transparent dans ce cas le bloc ne doit pas être transparent lui même
 			(*i)->setVisibility(
-					((x > 0) && (!_blocs[x-1 + WORLDSIZEX * y + WORLDSIZEY * WORLDSIZEX * z] || (_blocs[x-1 + WORLDSIZEX * y + WORLDSIZEY * WORLDSIZEX * z]->isTransparent() && !(*i)->isTransparent()))? BACK : 0)
+					((x > 0) && (!_blocs[XYZ(x-1, y, z)] || (_blocs[XYZ(x-1, y, z)]->isTransparent() && !(*i)->isTransparent()))? BACK : 0)
 				|
-					((y > 0) && (!_blocs[x + WORLDSIZEX * (y-1) + WORLDSIZEY * WORLDSIZEX * z] || (_blocs[x + WORLDSIZEX * (y-1) + WORLDSIZEY * WORLDSIZEX * z]->isTransparent() && !(*i)->isTransparent()))? LEFT : 0)
+					((y > 0) && (!_blocs[XYZ(x, y-1, z)] || (_blocs[XYZ(x, y-1, z)]->isTransparent() && !(*i)->isTransparent()))? LEFT : 0)
 				| 
-					((z > 0) && (!_blocs[x + WORLDSIZEX * y + WORLDSIZEY * WORLDSIZEX * (z-1)] || (_blocs[x + WORLDSIZEX * y + WORLDSIZEY * WORLDSIZEX * (z-1)]->isTransparent() && !(*i)->isTransparent())) ? BOT : 0)
+					((z > 0) && (!_blocs[XYZ(x, y, z-1)] || (_blocs[XYZ(x, y, z-1)]->isTransparent() && !(*i)->isTransparent())) ? BOT : 0)
 				|
-					((x < WORLDSIZEX) && (!_blocs[x+1 + WORLDSIZEX * y + WORLDSIZEY * WORLDSIZEX * z] || (_blocs[x+1 + WORLDSIZEX * y + WORLDSIZEY * WORLDSIZEX * z]->isTransparent() && !(*i)->isTransparent())) ? FRONT : 0)
+					((x < WORLDSIZEX-1) && (!_blocs[XYZ(x+1, y, z)] || (_blocs[XYZ(x+1, y, z)]->isTransparent() && !(*i)->isTransparent())) ? FRONT : 0)
 				| 
-					((y < WORLDSIZEY) && (!_blocs[x + WORLDSIZEX * (y+1) + WORLDSIZEY * WORLDSIZEX * z] || (_blocs[x + WORLDSIZEX * (y+1) + WORLDSIZEY * WORLDSIZEX * z]->isTransparent() && !(*i)->isTransparent())) ? RIGHT : 0)
+					((y < WORLDSIZEY-1) && (!_blocs[XYZ(x, y+1, z)] || (_blocs[XYZ(x, y+1, z)]->isTransparent() && !(*i)->isTransparent())) ? RIGHT : 0)
 				| 
-					((z < WORLDSIZEZ) && (!_blocs[x + WORLDSIZEX * y + WORLDSIZEY * WORLDSIZEX * (z+1)] || (_blocs[x + WORLDSIZEX * y + WORLDSIZEY * WORLDSIZEX * (z+1)]->isTransparent() && !(*i)->isTransparent())) ? TOP : 0)
+					((z < WORLDSIZEZ-1) && (!_blocs[XYZ(x, y, z+1)] || (_blocs[XYZ(x, y, z+1)]->isTransparent() && !(*i)->isTransparent())) ? TOP : 0)
 				|
-					(dynamic_cast<Water *>(*i) ? TRANSPARENT : 0)
+					((*i)->isTransparent() ? TRANSPARENT : 0)
 				);
-			if (((z < WORLDSIZEZ) && !_blocs[x + WORLDSIZEY * y + WORLDSIZEY * WORLDSIZEX * (z+1)]) && dynamic_cast<Dirt *>((*i)))
+			if (((z < WORLDSIZEZ-1) && !_blocs[XYZ(x, y, z+1)]) && dynamic_cast<Dirt *>((*i)))
 			{
 				char vis = (*i)->getVisibility();
 				delete *i;
@@ -416,4 +414,9 @@ void World::calcVisibility()
 			y = 0;
 		}
 	}
+}
+
+unsigned int World::hauteur(int x, int y)
+{
+	return _height[XY(x, y)];
 }

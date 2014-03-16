@@ -19,38 +19,38 @@ private:
 	static Camera * 	_activeCamera;
 
 protected:
-	Vect3D 	 eye;
-	Vect3D   center;
+	Vect3D 	 _eye;
+	Vect3D   _center;
 
-	GLdouble phi;
-	GLdouble theta;
+	GLdouble _phi;
+	GLdouble _theta;
 
-	Vect3D  avant;
-	Vect3D  gauche;
-	Vect3D  haut;
+	Vect3D  _avant;
+	Vect3D  _gauche;
+	Vect3D  _haut;
 
-	bool    avant_presse;
-	bool	arriere_presse;
-	bool	gauche_presse;
-	bool	droite_presse;
-	bool 	haut_presse;
-	bool	bas_presse;
+	bool    _avant_presse;
+	bool	_arriere_presse;
+	bool	_gauche_presse;
+	bool	_droite_presse;
+	bool 	_haut_presse;
+	bool	_bas_presse;
 
-	GLdouble vitesse;
+	GLdouble _vitesse;
 
 
 
 
 protected:
 	Camera(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ);
-	~Camera(){}
+	virtual ~Camera(){}
 
-	void 	move();
+	virtual void 	move();
 	void 	go(GLdouble x, GLdouble y, GLdouble z);
 	void 	vectorFromAngle();
 
 public:
-	void 	display();
+	virtual void display();
 
 public:
 	static void mouse_event(GLFWwindow *, double x, double y);

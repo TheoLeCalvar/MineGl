@@ -38,7 +38,6 @@ private:
 	static Moteur 	* 		_mot;
 	static Renderer * 		_renderer;
 
-	// std::vector<Objet *> 	m_listeObjet;
 	GLFWwindow* 			_window;
 	World * 				_world;
 
@@ -46,8 +45,7 @@ private:
 
 public:
 	static Moteur * create();
-
-	~Moteur();
+	static void 	destroy();
 
 	void 		start();
 
@@ -60,11 +58,10 @@ public:
 
 
 private:
-
+	~Moteur();
 	Moteur();
 
 
-	void 		lumiere();
 	void 		init_scene();
 
 };

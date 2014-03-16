@@ -55,6 +55,7 @@ public:
 	void 		setBlending(bool b);
 
 	void 		setNormal(GLfloat x, GLfloat y, GLfloat z);
+	void 		setNormal(GLfloat *v);
 	void 		useNormals(bool);
 
 	void 		setTranslation(GLfloat x, GLfloat y, GLfloat z);

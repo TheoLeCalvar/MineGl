@@ -39,14 +39,22 @@ Moteur::Moteur()
     glfwSetCursorPos (_window, 400, 300);
 }
 
+void Moteur::destroy()
+{
+    delete _mot;
+}
+
 Moteur::~Moteur()
 {
     _mot = NULL;
+
+    delete _world;
+    _renderer->destroy();
 }
 
 void showFrame()
 {
-  static int nbFrame = 0;
+  static int nbFrame = 1;
   static double temps = 0;
 
 
@@ -122,17 +130,9 @@ void Moteur::start()
 
         glEnd();
 
-        // _renderer->setActiveTex(Objet::m_texId[1]);
-        // for (std::vector<Objet *>::iterator i = mot->m_listeObjet.begin(); i != mot->m_listeObjet.end(); ++i)
-        // {
-        //     (*i)->display();
-        // }
-        // _renderer->display();
         _world->draw();
 
 
-
-        lumiere();
 
 
         glfwSwapBuffers(_window);
@@ -145,12 +145,6 @@ void Moteur::start()
 
     glfwTerminate();
 
-    // for (std::vector<Objet *>::iterator i = m_listeObjet.begin(); i != m_listeObjet.end(); ++i)
-    // {
-    //     delete (*i);
-    // }
-    delete _world;
-    _renderer->destroy();
 }
 
 
@@ -165,6 +159,7 @@ void Moteur::keyboard_handler(GLFWwindow * w, int key, int scancode, int action,
         case GLFW_KEY_S:
         case GLFW_KEY_Q:
         case GLFW_KEY_Z:
+        case GLFW_KEY_R:
         case GLFW_KEY_UP:
         case GLFW_KEY_LEFT:
         case GLFW_KEY_RIGHT:
@@ -245,82 +240,10 @@ void Moteur::switch_wire()
     wire = !wire;
 }
 
-//TODO: passer à un modèle propre de la lumière
-void Moteur::lumiere()
-{
-    GLfloat lum_amb[] = {0.2f, 0.2f, 0.2f, 1.0f};
-    GLfloat lum_pos[] = {10.0f, -20.0f, 10.0f, 1.0f};
-    GLfloat lum_dif[] = {0.8f, 0.8f, 0.8f, 1.0f};
-
-
-
-
-    glLightfv(GL_LIGHT1, GL_POSITION, lum_pos);
-    glLightfv(GL_LIGHT1, GL_AMBIENT , lum_amb);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_dif);
-    glLightfv(GL_LIGHT1, GL_SPECULAR, lum_dif);
-
-
-
-    // glEnable(GL_LIGHT1);
-
-
-    GLfloat lum_amb2[] = {0.2f, 0.2f, 0.2f, 1.0f};
-    GLfloat lum_pos2[] = {0.0f, 0.0f, 100.0f, 1.0f};
-    GLfloat lum_dif2[] = {0.8f, 0.8f, 0.8f, 1.0f};
-
-
-
-
-    glLightfv(GL_LIGHT2, GL_POSITION, lum_pos2);
-    glLightfv(GL_LIGHT2, GL_AMBIENT , lum_amb2);
-    glLightfv(GL_LIGHT2, GL_DIFFUSE, lum_dif2);
-    glLightfv(GL_LIGHT2, GL_SPECULAR, lum_dif2);
-
-
-
-    // glEnable(GL_LIGHT2);
-}
-
 void  Moteur::init_scene()
 {
     _renderer = Renderer::create();
     _world = new World(_renderer);
-
-
-
-    // int maxI = 20, maxJ = 20, maxK = 10, r;
-
-    // Cube *c = new Water(4.0f, 63);
-    // m_listeObjet.push_back(c);
-    // c = new Grass(2.0f, 63);
-    // c->setTranslation(2.0f, -1.0f, 0.0f);
-    // m_listeObjet.push_back(c);
-    // Cube * c;
-    // for (int i = 0; i < maxI; ++i)
-    // {
-    //     for (int j = 0; j < maxJ; ++j)
-    //     {
-    //         for (int k = 0; k < maxK; ++k)
-    //         {
-    //             if ((r = rand())%4)
-    //             {
-    //                 c = new Grass(1.0f, 63);
-    //             }
-    //             else if (r %3)
-    //             {
-    //                 c = new Stone(1.0f, 63);
-    //             }
-    //             else
-    //             {
-    //                 c = new Coal(1.0f, 63);
-    //             }
-                
-    //             c->setTranslation(i, j, k);
-    //             m_listeObjet.push_back(c);
-    //         }
-    //     }
-    // }
 }
 
 
