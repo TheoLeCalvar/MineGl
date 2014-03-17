@@ -50,41 +50,11 @@ void World::draw()
 {	
 	_player->display();
 
-		//soleil
+	//soleil
 	glPushMatrix();
-		// GLfloat alpha = fmod(glfwGetTime()*10, 360);
-		// glRotatef(alpha, 1.0f, 0.0f, 0.0f);
-		// glTranslatef(_player->getPositionX(), _player->getPositionY() + 200.0f, _player->getPositionZ());
-
-
-		// if (alpha < 180)
-		// {
-		// 	double sinus = sin(alpha * M_PI/360.0f), cosinus = cos(alpha * M_PI/360.0f)/10.0f;
-
-		// 	GLfloat lum_amb[] = {sinus*0.2f + cosinus, sinus*0.2f, sinus*0.2f, 1.0f};
-		// 	GLfloat lum_pos[] = {0.0f, 1.0f, 0.0f, 0.0f};
-		// 	GLfloat lum_dif[] = {sinus*0.7f + cosinus, sinus*0.7f, sinus*0.7f, 1.0f};
-
-		// 	glLightfv(GL_LIGHT1, GL_POSITION, lum_pos);
-		// 	glLightfv(GL_LIGHT1, GL_AMBIENT , lum_amb);
-		// 	glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_dif);
-		// 	glLightfv(GL_LIGHT1, GL_SPECULAR, lum_dif);
-
-		// 	glEnable(GL_LIGHT1);
-		// }
-		// else
-		// {
-		// 	GLfloat lum_amb[] = {0.2f, 0.2f, 0.3f, 1.0f};
-		// 	GLfloat lum_pos[] = {0.0f, -1.0f, 0.0f, 0.0f};
-		// 	GLfloat lum_dif[] = {0.2f, 0.2f, 0.4f, 1.0f};
-
-		// 	glLightfv(GL_LIGHT1, GL_POSITION, lum_pos);
-		// 	glLightfv(GL_LIGHT1, GL_AMBIENT , lum_amb);
-		// 	glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_dif);
-		// 	glLightfv(GL_LIGHT1, GL_SPECULAR, lum_dif);
-
-		// 	glEnable(GL_LIGHT1);
-		// }
+		GLfloat alpha = fmod(glfwGetTime()*2, 360);
+		glRotatef(alpha, 1.0f, 0.0f, 0.0f);
+		glTranslatef(_player->getPositionX(), _player->getPositionY() + 200.0f, _player->getPositionZ());
 
 		GLfloat lum_amb[] = {0.4f, 0.4f, 0.4f, 1.0f};
 		GLfloat lum_pos[] = {0.0f, 0.0f, 1.0f, 0.0f};
@@ -96,10 +66,6 @@ void World::draw()
 		glLightfv(GL_LIGHT1, GL_SPECULAR, lum_dif);
 
 		glEnable(GL_LIGHT1);
-
-
-
-
 	glPopMatrix();
 
 	static std::vector<int> v;
@@ -159,7 +125,7 @@ void World::draw()
 
 	}
 
-		//affichage des blocs transparents trouvés lors du premier parcours du monde
+	//affichage des blocs transparents trouvés lors du premier parcours du monde
 	_renderer->clean();
 	_renderer->setActiveTex(Cube::_texId[1]);
 	_renderer->setBlending(true);
@@ -201,7 +167,6 @@ void World::genHeight()
 	map[(WORLDSIZEX*WORLDSIZEY)-1] 	= WORLDSIZEZ / 2;
 
 
-//TODO garder la map de hauteur pour la réutiliser 
 	//génération de la hauteur du monde, algorithme squareDiamond, inspiré de http://hiko-seijuro.developpez.com/articles/diamond-square/
 	while (espace > 1)
 	{
