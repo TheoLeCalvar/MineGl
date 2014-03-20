@@ -41,6 +41,15 @@ Vect3D Vect3D::operator+(Vect3D v) {
 	return(res);
 }
 
+Vect3D & Vect3D::operator+=(Vect3D v) {
+
+	a[0] += v.a[0];
+	a[1] += v.a[1];
+	a[2] += v.a[2];
+
+	return(*this);
+}
+
 Vect3D Vect3D::operator-(Vect3D v) {
 
 	Vect3D res;
@@ -50,6 +59,15 @@ Vect3D Vect3D::operator-(Vect3D v) {
 	res.a[2] = a[2] - v.a[2];
 
 	return(res);
+}
+
+Vect3D & Vect3D::operator-=(Vect3D v) {
+
+	a[0] -= v.a[0];
+	a[1] -= v.a[1];
+	a[2] -= v.a[2];
+
+	return(*this);
 }
 
 Vect3D Vect3D::operator-(void) {
@@ -99,6 +117,17 @@ Vect3D Vect3D::operator/(GLdouble t) {
 
 GLdouble & Vect3D::operator[](int i){
 	return a[i];
+}
+
+bool 	Vect3D::operator!()
+{
+	return (fabs(a[0]) < 0.000001f) && (fabs(a[1]) < 0.000001f) && (fabs(a[2]) < 0.000001f);
+}
+
+
+void    Vect3D::operator ()(GLdouble x, GLdouble y, GLdouble z)
+{
+	set(x, y, z);
 }
 
 GLdouble Vect3D::length() 

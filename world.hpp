@@ -14,10 +14,8 @@ class Player;
 #ifdef __APPLE__
 //gestion de la souris
 	#include <OpenGL/gl.h>
-	#include <OpenGL/glu.h>
 #else
 	#include <GL/gl.h>
-	#include <GL/glu.h>
 #endif
 
 #include <GLFW/glfw3.h>
@@ -49,12 +47,15 @@ public:
 	~World();
 
 	void 			draw();
-	void 			touche(int key, int scancode, int action, int mods);
+	void 			touche(int key, int action);
 	unsigned int	hauteur(int x, int y);
+	bool			empty(float x, float y, float z);
+	bool 			empty(Vect3D p);
 
 private:
 	void 			genHeight();
 	void 			calcVisibility();
+	void 			sun();
 };
 
 

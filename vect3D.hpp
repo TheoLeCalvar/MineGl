@@ -22,11 +22,18 @@ public:
 	void copy(Vect3D v);
 
 	Vect3D 	operator+(Vect3D v);
-	Vect3D 	operator-(Vect3D v);
+	Vect3D & operator+=(Vect3D v);
+ 	Vect3D 	operator-(Vect3D v);
+ 	Vect3D & operator-=(Vect3D v);
 	Vect3D 	operator-(void);
 	Vect3D 	operator*(Vect3D v);
 	Vect3D 	operator*(GLdouble t);
 	Vect3D 	operator/(GLdouble t);
+	//set le vecteur avec les paramètres
+	void    operator ()(GLdouble x, GLdouble y, GLdouble z);
+
+	//retourne vrai si le vecteur est nul
+	bool 	operator!();
 	GLdouble &	operator[](int i);
 
 	GLdouble length();

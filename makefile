@@ -12,7 +12,7 @@ endif
 
 ifeq ($(UNAME), Linux)
 CXXFLAGS = -Wall
-LDFLAGS = -lSOIL -lGL -lGLU -lglfw3 -lX11 -lXxf86vm -lXrandr -lpthread -lXi
+LDFLAGS = -lSOIL -lGL -lglfw3 -lX11 -lXxf86vm -lXrandr -lpthread -lXi
 endif
  
  

@@ -9,9 +9,9 @@ Renderer::Renderer():
 _useNormals(true), _normX(0.0f), _normY(0.0f), _normZ(1.0f),
 _useTex(true), _texU(0.0f), _texV(0.0f), 
 _transX(0.0f), _transY(0.0f), _transZ(0.0f),
-_buffer(NULL), _bufSize(0), _bufIndex(0), _verticesCount(0)
+_buffer(NULL), _bufSize(0), _bufIndex(0), _verticesCount(0),
+_useMaterial(false)
 {
-
 }
 
 Renderer::~Renderer()
@@ -143,6 +143,83 @@ void 		Renderer::useNormals(bool b)
 	_useNormals = b;
 }
 
+
+void 		Renderer::setAmbient(GLfloat * v)
+{
+	_ambient[0] = v[0];
+	_ambient[1] = v[1];
+	_ambient[2] = v[2];
+	_ambient[3] = v[3];
+}
+
+void 		Renderer::setAmbient(Vect4D<GLfloat> v)
+{
+	_ambient[0] = v[0];
+	_ambient[1] = v[1];
+	_ambient[2] = v[2];
+	_ambient[3] = v[3];
+}
+
+void 		Renderer::setDiffuse(GLfloat * v)
+{
+	_diffuse[0] = v[0];
+	_diffuse[1] = v[1];
+	_diffuse[2] = v[2];
+	_diffuse[3] = v[3];
+}
+
+void 		Renderer::setDiffuse(Vect4D<GLfloat> v)
+{
+	_diffuse[0] = v[0];
+	_diffuse[1] = v[1];
+	_diffuse[2] = v[2];
+	_diffuse[3] = v[3];
+}
+
+void 		Renderer::setSpecular(GLfloat * v)
+{
+	_specular[0] = v[0];
+	_specular[1] = v[1];
+	_specular[2] = v[2];
+	_specular[3] = v[3];
+}
+
+void 		Renderer::setSpecular(Vect4D<GLfloat> v)
+{
+	_specular[0] = v[0];
+	_specular[1] = v[1];
+	_specular[2] = v[2];
+	_specular[3] = v[3];
+}
+
+void 		Renderer::setEmission(GLfloat * v)
+{
+	_emission[0] = v[0];
+	_emission[1] = v[1];
+	_emission[2] = v[2];
+	_emission[3] = v[3];
+}
+
+void 		Renderer::setEmission(Vect4D<GLfloat> v)
+{
+	_emission[0] = v[0];
+	_emission[1] = v[1];
+	_emission[2] = v[2];
+	_emission[3] = v[3];
+}
+
+void 		Renderer::setShininess(GLfloat v)
+{
+	_shininess = v;
+}
+
+void 		Renderer::useMaterial(bool b)
+{
+	_useMaterial = b;
+}
+
+
+
 void 		Renderer::setTranslation(GLfloat x, GLfloat y, GLfloat z)
 {
 	_transX = x;
@@ -165,14 +242,22 @@ void 		Renderer::display()
 
 	glPushMatrix();
 		
-		glMaterialfv(GL_FRONT, GL_AMBIENT, amb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, dif);
-		glMaterialfv(GL_BACK, GL_AMBIENT, spe);
-		glMaterialfv(GL_BACK, GL_DIFFUSE, spe);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spe);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, spe);
-		glMaterialf(GL_FRONT, GL_SHININESS, 0);
-
+		if (_useMaterial)
+		{
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, _ambient);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, _diffuse);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, _specular);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, _emission);
+			glMaterialf(GL_FRONT, GL_SHININESS, _shininess);
+		}
+		else
+		{
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spe);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, spe);
+			glMaterialf(GL_FRONT, GL_SHININESS, 0);
+		}
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, 8 * sizeof(GLfloat), _buffer);

@@ -1,0 +1,43 @@
+Le Calvar Théo
+Février 2014
+
+Projet OpenGL 
+
+Dépendances :
+	- libSOIL : http://www.lonesock.net/soil.html
+		Librairy prennant en charge le chargement de divers formats d'images, utilisé pour chargé des png
+
+	- GLFW3 : http://www.glfw.org/
+		Création de la fenêtre et gestion des inputs
+
+Conseil:
+	- si les fps sont trop faible il est possible de réduire la taille du monde à générer (voir world.hpp, modifier les constantes WORLDSIZE_, X et Y doivent être de la forme 2^n + 1, Z importe peu)
+
+Touches:
+	- Déplacement :
+		- z : avant
+		- q : gauche
+		- s : arrière
+		- d : droite
+
+		- en mode gravité :
+			- espace : sauter
+
+		- en mode libre : 
+			- a : haut
+			- w : bas
+
+	- Caméra :
+		- souris
+
+	- Commandes :
+		- 1 : activer/désactiver la lumière
+		- 2 : activer/désactiver le culling
+		- 3 : passer du mode plein au mode fil de fer
+
+
+En mode libre la caméra peut se déplacer n'importe où dans le monde, autrement le sujet est soumis à la gravité et les bloqué par les blocs. 
+
+Les blocs formant le monde sont entièrement texturés et prennent en compte les matériaux (neutre pour les blocs non transparent et bleuté pour les blocs d'eau).
+Une lumière directionnel vient d'un soleil qui gravite autour du monde. 
+

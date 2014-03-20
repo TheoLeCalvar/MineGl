@@ -41,20 +41,32 @@ World::~World()
 	delete _player;
 }
 
-void World::touche(int key, int scancode, int action, int mods)
+void World::touche(int key, int action)
 {
-	_player->toucheJoueur(key, scancode, action, mods);
+	_player->toucheJoueur(key, action);
 }
 
-void World::draw()
-{	
-	_player->display();
-
+void World::sun()
+{
 	//soleil
 	glPushMatrix();
 		GLfloat alpha = fmod(glfwGetTime()*2, 360);
 		glRotatef(alpha, 1.0f, 0.0f, 0.0f);
 		glTranslatef(_player->getPositionX(), _player->getPositionY() + 200.0f, _player->getPositionZ());
+
+		glBindTexture(GL_TEXTURE_2D, Cube::_texId[0]);
+
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 32.0f/64.0f);
+			glVertex3f(-2.5f, 0.0f, 2.5f);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex3f(-2.5f, 0.0f, -2.5f);
+			glTexCoord2f(31.0f/64.0f,1.0f);
+			glVertex3f(2.5f, 0.0f, -2.5f);
+			glTexCoord2f(31.0f/64.0f,32.0f/64.0f);
+			glVertex3f(2.5f, 0.0f, 2.5f);
+		glEnd();
+
 
 		GLfloat lum_amb[] = {0.4f, 0.4f, 0.4f, 1.0f};
 		GLfloat lum_pos[] = {0.0f, 0.0f, 1.0f, 0.0f};
@@ -67,6 +79,14 @@ void World::draw()
 
 		glEnable(GL_LIGHT1);
 	glPopMatrix();
+}
+
+
+void World::draw()
+{	
+	_player->display();
+
+	sun();
 
 	static std::vector<int> v;
 
@@ -78,10 +98,15 @@ void World::draw()
 	else
 	{
 		_listId = glGenLists(1);
+		GLfloat fog[] = {163/255.0f, 226/255.0f, 255/255.0f, 1.0f};
 
 		glNewList(_listId, GL_COMPILE_AND_EXECUTE);
 
-
+			glFogf(GL_FOG_MODE, GL_EXP);
+			glFogf(GL_FOG_DENSITY, 0.001f);
+			glFogf(GL_FOG_START, 100.0f);
+			glFogf(GL_FOG_END, 200.0f);
+			glFogfv(GL_FOG_COLOR, fog);
 
 			//parcour du monde, affichage des blocs non transparents, stockage des blocs transparent dans un vector temporaire pour un affichage plus tard
 
@@ -89,6 +114,7 @@ void World::draw()
 			_renderer->clean();
 			_renderer->setActiveTex(Cube::_texId[0]);
 			_renderer->setBlending(false);
+			_renderer->useMaterial(false);
 
 			for (int i = 0, x = 0, y = 0, z = 0; i < WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ; ++i)
 			{
@@ -122,13 +148,26 @@ void World::draw()
 			_renderer->display();
 			
 		glEndList();
-
 	}
+
+	static GLfloat ambient[] = {0.1f, 0.15f, 0.35f, 1.0f};
+	static GLfloat diffuse[] = {0.65f, 0.75f, 1.0f, 1.0f};
+	static GLfloat specular[] = {0.50f, 0.50f, 0.80f, 1.0f};
+	static GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+	static GLfloat shininess = 1.0f;
+
 
 	//affichage des blocs transparents trouvés lors du premier parcours du monde
 	_renderer->clean();
 	_renderer->setActiveTex(Cube::_texId[1]);
 	_renderer->setBlending(true);
+	_renderer->useMaterial(true);
+
+	_renderer->setAmbient(ambient);
+	_renderer->setDiffuse(diffuse);
+	_renderer->setSpecular(specular);
+	_renderer->setEmission(emission);
+	_renderer->setShininess(shininess);
 
 
 	for (std::vector<int>::iterator i = v.begin(); i != v.end(); ++i)
@@ -384,4 +423,14 @@ void World::calcVisibility()
 unsigned int World::hauteur(int x, int y)
 {
 	return _height[XY(x, y)];
+}
+
+bool 	World::empty(float x, float y, float z)
+{
+	return (x < 0) || (x >= WORLDSIZEX) || (y < 0) || (y >= WORLDSIZEY) || (z < 0) || (z >= WORLDSIZEZ) || !_blocs[XYZ(static_cast<unsigned int>(x), static_cast<unsigned int>(y), static_cast<unsigned int>(z))];
+}
+
+bool 	World::empty(Vect3D p)
+{
+	return empty(p[0], p[1], p[2]);
 }

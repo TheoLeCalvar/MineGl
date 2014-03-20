@@ -36,6 +36,13 @@ private:
 	int 					_bufIndex;
 	int						_verticesCount;
 
+	bool 					_useMaterial;
+	GLfloat 				_ambient[4];
+	GLfloat					_diffuse[4];
+	GLfloat					_specular[4];
+	GLfloat					_emission[4];
+	GLfloat 				_shininess;
+
 	Renderer();
 	~Renderer();
 
@@ -57,6 +64,18 @@ public:
 	void 		setNormal(GLfloat x, GLfloat y, GLfloat z);
 	void 		setNormal(GLfloat *v);
 	void 		useNormals(bool);
+
+
+	void 		setAmbient(GLfloat * v);
+	void 		setAmbient(Vect4D<GLfloat> v);
+	void 		setDiffuse(GLfloat * v);
+	void 		setDiffuse(Vect4D<GLfloat> v);
+	void 		setSpecular(GLfloat * v);
+	void 		setSpecular(Vect4D<GLfloat> v);
+	void 		setEmission(GLfloat * v);
+	void 		setEmission(Vect4D<GLfloat> v);
+	void 		setShininess(GLfloat v);
+	void 		useMaterial(bool);
 
 	void 		setTranslation(GLfloat x, GLfloat y, GLfloat z);
 	void 		setTranslation(GLfloat * v);

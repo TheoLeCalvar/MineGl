@@ -1,11 +1,16 @@
 #include "player.hpp"
 
-Player::Player(World * w):Camera(-20, -20, 80), _world(w), _fly(true), _v(0.0f,0.0f,0.0f), _jump(false){}
+#include <iostream>
+
+Vect3D Player::_gravity(0.0f, 0.0f, 0.02f);
+
+
+Player::Player(World * w):Camera(-20, -20, 80), _world(w), _fly(true), _v(0.0f,0.0f,0.0f), _jump(false), _espace_presse(false){}
 Player::~Player(){}
 
 
 
-void Player::toucheJoueur(int key, int scancode, int action, int mods)
+void Player::toucheJoueur(int key, int action)
 {
 	switch (key) {
         case GLFW_KEY_LEFT:
@@ -39,10 +44,11 @@ void Player::toucheJoueur(int key, int scancode, int action, int mods)
         break;
 
         case GLFW_KEY_SPACE:
-            go(5,5,0);
-            _phi = 0.0f;
-            _theta = 180.0f;
-            vectorFromAngle();
+	        if (!_jump)
+	        {
+				_v(0.0f, 0.0f, 0.5f);
+				_jump = true;
+			}
         break;
 
         case GLFW_KEY_R:
@@ -53,7 +59,7 @@ void Player::toucheJoueur(int key, int scancode, int action, int mods)
         break;
     }
 }
-//TODO
+
 void 	Player::move()
 {
 	if (_fly)
@@ -62,40 +68,62 @@ void 	Player::move()
 	}
 	else
 	{
-		Vect3D av(cos(_theta * M_PI/180), sin(_theta * M_PI/180), 0.0f), s =  _haut * av;
+		Vect3D av(cos(_theta * M_PI/180), sin(_theta * M_PI/180), 0.0f);
+		av.normalize();
+		Vect3D s =  _haut * av;
+		s.normalize();
 
-		if (_avant_presse)
+		Vect3D pied = _eye - Vect3D(0.0f, 0.0f, 1.5f);
+
+		if (!_v)
 		{
-			_eye = _eye + av * _vitesse;
+			if (_world->empty(pied - _gravity))
+			{
+				_v -= _gravity;
+			}
 		}
-		if (_gauche_presse)
+		else
 		{
-			_eye = _eye + s * _vitesse;
-		}
-		if (_arriere_presse)
-		{
-			_eye = _eye - av * _vitesse;
-		}
-		if (_droite_presse)
-		{
-			_eye = _eye - s * _vitesse;
-		}
-		if (_haut_presse)
-		{
-			_eye = _eye + _haut * _vitesse;
-		}
-		if (_bas_presse)
-		{
-			_eye = _eye - _haut * _vitesse;
-		}
-//TODO à améliorer
-		//on check si on la caméra entre sous la surface, modifie la position et retourne true si modifé
-		if(_eye[2] -1.8f < _world->hauteur(_eye[0], _eye[1]))
-		{
-			_eye = _eye + _haut*1.8f;
+			if (_world->empty(pied + _v))
+			{
+				pied += _v;
+				_v -= _gravity;
+			}
+			else
+			{
+				_v(0.0f, 0.0f, 0.0f);
+				_jump = false;
+				pied[3] = _world->hauteur(static_cast<unsigned int>(pied[0]), static_cast<unsigned int>(pied[1]));
+			}
 		}
 
+		_eye = pied + Vect3D(0.0f, 0.0f, 1.5f);
 
+
+		if (_avant_presse && _world->empty(pied + av * _vitesse))
+		{
+			_eye += av * _vitesse;
+		}
+		if (_gauche_presse && _world->empty(pied + s * _vitesse))
+		{
+			_eye += s * _vitesse;
+		}
+		if (_arriere_presse && _world->empty(pied - av * _vitesse))
+		{
+			_eye -= av * _vitesse;
+		}
+		if (_droite_presse && _world->empty(pied - s * _vitesse))
+		{
+			_eye -= s * _vitesse;
+		}
+		if (_haut_presse && _world->empty(pied + _haut * _vitesse))
+		{
+			_eye += _haut * _vitesse;
+		}
+		if (_bas_presse && _world->empty(pied - _haut * _vitesse))
+		{			
+			_eye -= _haut * _vitesse;
+		}
 
 		_center = _eye + _avant;
 

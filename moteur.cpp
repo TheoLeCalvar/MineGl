@@ -85,6 +85,7 @@ void Moteur::start()
     glEnable(GL_CULL_FACE);
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_FOG);
 
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -149,7 +150,7 @@ void Moteur::start()
 
 
 
-void Moteur::keyboard_handler(GLFWwindow * w, int key, int scancode, int action, int mods)
+void Moteur::keyboard_handler(GLFWwindow *, int key, int, int action, int)
 {
     switch (key) {
 
@@ -167,7 +168,7 @@ void Moteur::keyboard_handler(GLFWwindow * w, int key, int scancode, int action,
         case GLFW_KEY_PAGE_UP:
         case GLFW_KEY_PAGE_DOWN:
         case GLFW_KEY_SPACE:
-            _mot->_world->touche(key, scancode, action, mods);
+            _mot->_world->touche(key, action);
         break;
 
         case GLFW_KEY_ESCAPE: 

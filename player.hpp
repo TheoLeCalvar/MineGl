@@ -12,18 +12,20 @@ private:
 	World * 	_world;
 	bool 		_fly;
 	Vect3D 		_v;
-	Vect3D 		_position;
 	bool 		_jump;
+	bool		_espace_presse;
+
+	static Vect3D _gravity;
 
 public:
 	Player(World * w);
 	Player(GLfloat x, GLfloat y, GLfloat z);
 	virtual ~Player();
 
-	void 	toucheJoueur(int key, int scancode, int action, int mods);
-	GLfloat  getPositionX(){return _position[0];}
-	GLfloat  getPositionY(){return _position[1];}
-	GLfloat  getPositionZ(){return _position[2];}
+	void 	toucheJoueur(int key, int action);
+	GLfloat  getPositionX(){return _eye[0];}
+	GLfloat  getPositionY(){return _eye[1];}
+	GLfloat  getPositionZ(){return _eye[2];}
 
 protected:
 	virtual void 	move();
