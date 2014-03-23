@@ -271,6 +271,7 @@ void 		Renderer::display()
 		if (_useTex)
 		{
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glEnable(GL_TEXTURE_2D);
 			glTexCoordPointer(2, GL_FLOAT, 8 * sizeof(GLfloat), _buffer + 3);
 		}
 
@@ -289,6 +290,7 @@ void 		Renderer::display()
 		if (_useTex)
 		{
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			glDisable(GL_TEXTURE_2D);
 		}
 		
 

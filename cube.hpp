@@ -25,6 +25,17 @@ class Cube
 public:
  	static GLuint   _texId[];
 
+ 	typedef enum
+ 	{
+ 		AIR = 0,
+ 		CUBE,
+ 		STONE,
+ 		DIRT,
+ 		GRASS, 
+ 		WATER,
+ 		COAL
+ 	} cube_type;
+
 protected:
 	static Renderer *      _renderer;
 	static GLfloat  _points[];
@@ -45,6 +56,7 @@ public:
 	unsigned char getVisibility(side s){return _visibility & s;}
 
 	virtual void display();
+	virtual cube_type getType(){return CUBE;}
 };
 
 #endif

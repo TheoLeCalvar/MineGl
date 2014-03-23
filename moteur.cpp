@@ -77,7 +77,7 @@ void Moteur::start()
     glfwGetWindowSize(_window, &width, &height);
 
 
-    glClearColor(0,0,0,0);
+    glClearColor(171/255.0f,247/255.0f,1.0,0);
     glShadeModel(GL_SMOOTH);
 
 
@@ -132,8 +132,6 @@ void Moteur::start()
         glEnd();
 
         _world->draw();
-
-
 
 
         glfwSwapBuffers(_window);

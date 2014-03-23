@@ -10,9 +10,9 @@
 #define XY(x, y) ((x) + ((y) * WORLDSIZEX))
 
 class Player;
+class Luciole;
 
 #ifdef __APPLE__
-//gestion de la souris
 	#include <OpenGL/gl.h>
 #else
 	#include <GL/gl.h>
@@ -29,6 +29,7 @@ class Player;
 #include "dirt.hpp"
 #include "water.hpp"
 
+
 class World
 {
 private:
@@ -41,6 +42,7 @@ private:
 
 
 	Player * 					_player;
+	Luciole * 					_luciole;
 
 public:
 	World(Renderer * renderer);
@@ -51,6 +53,7 @@ public:
 	unsigned int	hauteur(int x, int y);
 	bool			empty(float x, float y, float z);
 	bool 			empty(Vect3D p);
+	Cube::cube_type getCubeType(unsigned int x, unsigned int y, unsigned int z);
 
 private:
 	void 			genHeight();

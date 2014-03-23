@@ -10,6 +10,7 @@ public:
 	~Grass(){}
 	
 	virtual void display();
+	virtual cube_type getType(){return GRASS;}
 };
 
 #endif

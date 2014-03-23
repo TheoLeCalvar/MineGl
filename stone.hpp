@@ -15,6 +15,7 @@ public:
 	~Stone(){}
 	
 	virtual void display();
+	virtual cube_type getType(){return STONE;}
 };
 
 #endif

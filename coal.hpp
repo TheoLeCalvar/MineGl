@@ -15,6 +15,7 @@ public:
 	~Coal(){}
 	
 	virtual void display();
+	virtual cube_type getType(){return COAL;}
 };
 
 #endif

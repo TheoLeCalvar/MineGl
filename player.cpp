@@ -46,7 +46,7 @@ void Player::toucheJoueur(int key, int action)
         case GLFW_KEY_SPACE:
 	        if (!_jump)
 	        {
-				_v(0.0f, 0.0f, 0.5f);
+				_v(0.0f, 0.0f, 0.4f);
 				_jump = true;
 			}
         break;

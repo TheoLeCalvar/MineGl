@@ -1,5 +1,6 @@
 #include "world.hpp"
 #include "player.hpp"
+#include "luciole.hpp"
 
 #include <cstdlib> //rand
 #include <cmath>
@@ -14,7 +15,7 @@ _renderer(renderer), _listId(0)
 {
 	Cube::setRenderer(_renderer);
 	Cube::loadTexture();
-	_player = new Player(this);
+
 
 	
 	_blocs.reserve(WORLDSIZEX * WORLDSIZEY * WORLDSIZEZ);
@@ -27,6 +28,9 @@ _renderer(renderer), _listId(0)
 	//calcule les visibilités des blocs
 	calcVisibility();
 
+
+	_player = new Player(this);
+	_luciole = new Luciole(this);
 }
 
 World::~World()
@@ -51,6 +55,7 @@ void World::sun()
 	//soleil
 	glPushMatrix();
 		GLfloat alpha = fmod(glfwGetTime()*2, 360);
+		glRotatef(20, 0.0f, 0.0f, 1.0f);
 		glRotatef(alpha, 1.0f, 0.0f, 0.0f);
 		glTranslatef(_player->getPositionX(), _player->getPositionY() + 200.0f, _player->getPositionZ());
 
@@ -74,8 +79,8 @@ void World::sun()
 
 		glLightfv(GL_LIGHT1, GL_POSITION, lum_pos);
 		glLightfv(GL_LIGHT1, GL_AMBIENT , lum_amb);
-		glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_dif);
-		glLightfv(GL_LIGHT1, GL_SPECULAR, lum_dif);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_amb);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, lum_amb);
 
 		glEnable(GL_LIGHT1);
 	glPopMatrix();
@@ -154,7 +159,7 @@ void World::draw()
 	static GLfloat diffuse[] = {0.65f, 0.75f, 1.0f, 1.0f};
 	static GLfloat specular[] = {0.50f, 0.50f, 0.80f, 1.0f};
 	static GLfloat emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
-	static GLfloat shininess = 1.0f;
+	static GLfloat shininess = 20.0f;
 
 
 	//affichage des blocs transparents trouvés lors du premier parcours du monde
@@ -178,10 +183,9 @@ void World::draw()
 
 	_renderer->display();
 
+	_luciole->draw();
+
 	Water::inc();
-
-
-
 }
 
 void World::genHeight()
@@ -427,10 +431,15 @@ unsigned int World::hauteur(int x, int y)
 
 bool 	World::empty(float x, float y, float z)
 {
-	return (x < 0) || (x >= WORLDSIZEX) || (y < 0) || (y >= WORLDSIZEY) || (z < 0) || (z >= WORLDSIZEZ) || !_blocs[XYZ(static_cast<unsigned int>(x), static_cast<unsigned int>(y), static_cast<unsigned int>(z))];
+	return (x >= 0) && (x < WORLDSIZEX) && (y >= 0) && (y < WORLDSIZEY) && (z >= 0) && (z < WORLDSIZEZ) && !_blocs[XYZ(static_cast<unsigned int>(x), static_cast<unsigned int>(y), static_cast<unsigned int>(z))];
 }
 
 bool 	World::empty(Vect3D p)
 {
 	return empty(p[0], p[1], p[2]);
+}
+
+Cube::cube_type World::getCubeType(unsigned int x, unsigned int y, unsigned int z)
+{
+	return ((x < WORLDSIZEX) && (y < WORLDSIZEY) && (z < WORLDSIZEZ) && _blocs[XYZ(x, y, z)]) ? _blocs[XYZ(x, y, z)]->getType() : Cube::AIR;
 }

@@ -14,6 +14,7 @@ public:
 	~Water(){}
 	
 	virtual void display();
+	virtual cube_type getType(){return WATER;}
 	static void inc();
 };
 

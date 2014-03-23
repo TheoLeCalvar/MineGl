@@ -11,7 +11,7 @@ Dépendances :
 		Création de la fenêtre et gestion des inputs
 
 Conseil:
-	- si les fps sont trop faible il est possible de réduire la taille du monde à générer (voir world.hpp, modifier les constantes WORLDSIZE_, X et Y doivent être de la forme 2^n + 1, Z importe peu)
+	- si les fps sont trop bas il est possible de réduire la taille du monde à générer (voir world.hpp, modifier les constantes WORLDSIZE_, X et Y doivent être de la forme 2^n + 1, Z importe peu)
 
 Touches:
 	- Déplacement :
