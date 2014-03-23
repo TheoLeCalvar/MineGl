@@ -2,6 +2,7 @@ EXT = cpp
 CXX = g++
 
 EXEC = exe
+ZIP = openGL.zip
 
 UNAME = $(shell uname)
 
@@ -32,6 +33,7 @@ $(OBJDIR)/%.o: %.$(EXT)
 clean:
 	@rm -rf $(OBJDIR)/*.o
 	@rm -f $(EXEC)
+	@rm -f $(ZIP)
 
 deploy: $(EXEC)
 	install_name_tool -change /usr/lib/libSystem.B.dylib @executable_path/lib/libSystem.B.dylib $(EXEC)
@@ -40,4 +42,4 @@ deploy: $(EXEC)
 	install_name_tool -change /usr/lib/libc++.1.dylib @executable_path/lib/libc++.1.dylib $(EXEC)
 
 zip: deploy
-	zip out.zip $(EXEC) lib/* texture/textures.png texture/water_still.png
+	zip $(ZIP) $(EXEC) lib/* texture/textures.png texture/water_still.png

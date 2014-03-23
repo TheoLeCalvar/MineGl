@@ -306,22 +306,23 @@ void Luciole::AI()
 
 	if (fabs(_theta - thetaCible) < 0.1f)
 	{
-		thetaCible = rand() % 360;
+		thetaCible = static_cast<GLfloat>(rand() % 360);
 		thetaOrig = _theta;
 	}
 
 	if (fabs(_phi - phiCible) < 0.1f)
 	{
-		phiCible = (rand() % 180) - 90;
+		phiCible = static_cast<GLfloat>((rand() % 180) - 90);
 		phiOrig = _phi;
 	}
 
 
+	// std::cout << "phi avant : " << _phi;
 
 	_phi = _phi + (phiCible - phiOrig)/64.f;
 	_theta =  _theta + (thetaCible - thetaOrig)/64.0f;
 
-	std::cout << "phi : " << _phi << " | phi cible : " << phiCible << " | phiOrig : " << phiOrig << " | diff = " << (phiCible - phiOrig)/64.f << std::endl;
+	// std::cout << " | phi : " << _phi << " | phi cible : " << phiCible << " | phiOrig : " << phiOrig << " | diff = " << (phiCible - phiOrig)/64.f << std::endl;
 	// std::cout << "theta : " << _theta << " | theta cible : " << thetaCible << std::endl;
 
 	double tmp = cos(_phi * M_PI/180);
@@ -336,6 +337,6 @@ void Luciole::AI()
 	else
 	{
 		_pos -= avant*0.05f;
-		_pos[3] = _world->hauteur(static_cast<unsigned int>(_pos[0]), static_cast<unsigned int>(_pos[1]));
+		_pos[3] = static_cast<GLdouble>(_world->hauteur(static_cast<unsigned int>(_pos[0]), static_cast<unsigned int>(_pos[1])));
 	}
 }
