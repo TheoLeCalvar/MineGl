@@ -5,9 +5,19 @@
 Vect3D Player::_gravity(0.0f, 0.0f, 0.02f);
 
 
-Player::Player(World * w):Camera(-20, -20, 80), _world(w), _fly(true), _v(0.0f,0.0f,0.0f), _jump(false), _espace_presse(false){}
+Player::Player(World * w):_world(w), _fly(false), _v(0.0f,0.0f,0.0f), _jump(false), _espace_presse(false)
+{
+	spawn();
+}
+
 Player::~Player(){}
 
+void Player::spawn()
+{
+	int x = rand() % WORLDSIZEX, y = rand() % WORLDSIZEY, z = _world->hauteur(x, y) + 3.0f;
+
+	_eye(x, y, z);
+}
 
 
 void Player::toucheJoueur(int key, int action)
@@ -73,7 +83,7 @@ void 	Player::move()
 		Vect3D s =  _haut * av;
 		s.normalize();
 
-		Vect3D pied = _eye - Vect3D(0.0f, 0.0f, 1.5f);
+		Vect3D pied = _eye - Vect3D(0.0f, 0.0f, 1.8f);
 
 		if (!_v)
 		{
@@ -97,7 +107,7 @@ void 	Player::move()
 			}
 		}
 
-		_eye = pied + Vect3D(0.0f, 0.0f, 1.5f);
+		_eye = pied + Vect3D(0.0f, 0.0f, 1.8f);
 
 
 		if (_avant_presse && _world->empty(pied + av * _vitesse))

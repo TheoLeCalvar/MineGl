@@ -42,7 +42,7 @@ protected:
 
 
 protected:
-	Camera(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ);
+	Camera(GLdouble eyeX = 0.0f, GLdouble eyeY = 0.0f, GLdouble eyeZ = 0.0f);
 	virtual ~Camera(){}
 
 	virtual void 	move();

@@ -41,3 +41,4 @@ En mode libre la caméra peut se déplacer n'importe où dans le monde, autremen
 Les blocs formant le monde sont entièrement texturés et prennent en compte les matériaux (neutre pour les blocs non transparent et bleuté pour les blocs d'eau).
 Une lumière directionnel vient d'un soleil qui gravite autour du monde. 
 
+Il y a une luciole qui se déplace librement dans l'espace, les collisions avec le sol sont partiellement gérées (pas de masque de collision, seule la position d'origine du dessin est vérifiée). Cette luciole émet une faible lumière positionnelle.

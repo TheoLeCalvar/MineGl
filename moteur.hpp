@@ -40,7 +40,6 @@ private:
 	World * 				_world;
 
 
-
 public:
 	static Moteur * create();
 	static void 	destroy();

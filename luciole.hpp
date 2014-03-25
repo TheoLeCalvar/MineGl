@@ -21,10 +21,10 @@ class Luciole
 	World * 	_world;
 
 	Vect3D 		_pos;
-	GLfloat 	_theta;
-	GLfloat 	_phi;
+	GLdouble 	_theta;
+	GLdouble 	_phi;
 	//wing angle
-	GLfloat 	_alpha;
+	GLdouble 	_alpha;
 	char 		_frame;
 
 	static GLfloat 	_body[];
@@ -43,6 +43,7 @@ public:
 
 	void draw();
 	void AI();
+	Vect3D getPos();
 
 private:
 	void spawn();

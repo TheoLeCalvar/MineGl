@@ -31,6 +31,7 @@ _renderer(renderer), _listId(0)
 
 	_player = new Player(this);
 	_luciole = new Luciole(this);
+	_modele = new Model("modele/flutter.obj");
 }
 
 World::~World()
@@ -47,11 +48,23 @@ World::~World()
 
 void World::touche(int key, int action)
 {
-	_player->toucheJoueur(key, action);
+	switch (key)
+	{
+		case GLFW_KEY_T:
+			_player->go(_luciole->getPos());
+		break;
+
+
+		default:
+			_player->toucheJoueur(key, action);
+	}
+
 }
 
 void World::sun()
 {
+	glEnable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 	//soleil
 	glPushMatrix();
 		GLfloat alpha = fmod(glfwGetTime()*2, 360);
@@ -63,13 +76,13 @@ void World::sun()
 
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 32.0f/64.0f);
-			glVertex3f(-2.5f, 0.0f, 2.5f);
+			glVertex3f(-10.0f, 0.0f, 10.0f);
 			glTexCoord2f(0.0f, 1.0f);
-			glVertex3f(-2.5f, 0.0f, -2.5f);
+			glVertex3f(-10.0f, 0.0f, -10.0f);
 			glTexCoord2f(31.0f/64.0f,1.0f);
-			glVertex3f(2.5f, 0.0f, -2.5f);
+			glVertex3f(10.0f, 0.0f, -10.0f);
 			glTexCoord2f(31.0f/64.0f,32.0f/64.0f);
-			glVertex3f(2.5f, 0.0f, 2.5f);
+			glVertex3f(10.0f, 0.0f, 10.0f);
 		glEnd();
 
 
@@ -79,7 +92,7 @@ void World::sun()
 
 		glLightfv(GL_LIGHT1, GL_POSITION, lum_pos);
 		glLightfv(GL_LIGHT1, GL_AMBIENT , lum_amb);
-		glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_amb);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, lum_dif);
 		glLightfv(GL_LIGHT1, GL_SPECULAR, lum_amb);
 
 		glEnable(GL_LIGHT1);
@@ -91,7 +104,15 @@ void World::draw()
 {	
 	_player->display();
 
+	// glPushMatrix();
+
+	// glTranslatef(0.0f, 0.0f, 0.0f);
+	// _modele->draw();
+
+	// glPopMatrix();
+
 	sun();
+
 
 	static std::vector<int> v;
 
@@ -424,9 +445,13 @@ void World::calcVisibility()
 	}
 }
 
-unsigned int World::hauteur(int x, int y)
+unsigned int World::hauteur(unsigned int x, unsigned int y)
 {
-	return _height[XY(x, y)];
+	if ((x >= WORLDSIZEX) || (y >= WORLDSIZEY))
+	{
+		return WATER_LEVEL;
+	}
+	return (_height[XY(x, y)] < WATER_LEVEL) ? WATER_LEVEL : _height[XY(x, y)];
 }
 
 bool 	World::empty(float x, float y, float z)

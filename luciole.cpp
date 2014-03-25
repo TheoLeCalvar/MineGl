@@ -110,40 +110,24 @@ Luciole::~Luciole()
 void Luciole::spawn()
 {
 	//on cherche un bloc d'eau
-	for (unsigned int i = 0, x = 0, y = 0, z = WATER_LEVEL; x*y < WORLDSIZEX * WORLDSIZEY; ++i)
+	int x = WORLDSIZEX/ 2, y = WORLDSIZEY / 2, z = 0;
+	int xL, yL, zL;
+
+	z = _world->hauteur(x, y);
+
+	while(true)
 	{
+		xL = (rand() % 9) - 5;
+		yL = (rand() % 9) - 5;
+		zL = (rand() % 3) + 2;
 
-		if (_world->getCubeType(x, y, z) == Cube::WATER)
+		if (_world->empty(x + xL, y + yL, z + zL))
 		{
-			int xL = 0, yL = 0, zL = 0;
-
-			while(true)
-			{
-				xL = (rand() % 9) - 5;
-				yL = (rand() % 9) - 5;
-				zL = (rand() % 3) + 1;
-
-				if (_world->empty(x + xL, y + yL, z + zL))
-				{
-					_pos(static_cast<GLdouble>(x + xL), static_cast<GLdouble>(y + yL), static_cast<GLdouble>(z + zL));
-					std::cout << _pos[0] << " " << _pos[1] << " " << _pos[2] << std::endl;
-					return;
-				}
-			}
-		}
-
-		++x;
-		if (x==WORLDSIZEX)
-		{
-			++y;
-			x = 0;
-		}
-		if (y == WORLDSIZEY)
-		{
-			++z;
-			y = 0;
+			_pos(static_cast<GLdouble>(x + xL), static_cast<GLdouble>(y + yL), static_cast<GLdouble>(z + zL));
+			return;
 		}
 	}
+
 }
 
 
@@ -299,31 +283,27 @@ void Luciole::draw()
 
 void Luciole::AI()
 {
-	static GLfloat thetaCible = _theta;
-	static GLfloat thetaOrig = _theta;
-	static GLfloat phiCible = _phi;
-	static GLfloat phiOrig = _phi;
+	static GLdouble thetaCible = _theta;
+	static GLdouble thetaOrig = _theta;
+	static GLdouble phiCible = _phi;
+	static GLdouble phiOrig = _phi;
 
 	if (fabs(_theta - thetaCible) < 0.1f)
 	{
-		thetaCible = static_cast<GLfloat>(rand() % 360);
+		thetaCible = static_cast<GLdouble>(rand() % 360);
 		thetaOrig = _theta;
 	}
 
 	if (fabs(_phi - phiCible) < 0.1f)
 	{
-		phiCible = static_cast<GLfloat>((rand() % 180) - 90);
+		phiCible = static_cast<GLdouble>((rand() % 180) - 90);
 		phiOrig = _phi;
 	}
 
 
-	// std::cout << "phi avant : " << _phi;
+	_phi += (phiCible - phiOrig)/64.f;
+	_theta += (thetaCible - thetaOrig)/64.0f;
 
-	_phi = _phi + (phiCible - phiOrig)/64.f;
-	_theta =  _theta + (thetaCible - thetaOrig)/64.0f;
-
-	// std::cout << " | phi : " << _phi << " | phi cible : " << phiCible << " | phiOrig : " << phiOrig << " | diff = " << (phiCible - phiOrig)/64.f << std::endl;
-	// std::cout << "theta : " << _theta << " | theta cible : " << thetaCible << std::endl;
 
 	double tmp = cos(_phi * M_PI/180);
 	Vect3D avant(tmp * cos(_theta * M_PI/180), tmp * sin(_theta * M_PI/180), sin(_phi * M_PI/180));
@@ -337,6 +317,14 @@ void Luciole::AI()
 	else
 	{
 		_pos -= avant*0.05f;
-		_pos[3] = static_cast<GLdouble>(_world->hauteur(static_cast<unsigned int>(_pos[0]), static_cast<unsigned int>(_pos[1])));
+		_pos[2] = _world->hauteur(static_cast<unsigned int>(_pos[0]), static_cast<unsigned int>(_pos[1])) + 1.2f;
+
+		phiCible = -1 * static_cast<GLdouble>(rand() % 90);
+		phiOrig = _phi;	
 	}
+}
+
+Vect3D Luciole::getPos()
+{
+	return _pos;
 }

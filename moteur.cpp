@@ -4,6 +4,8 @@
 #include <iostream>
 
 
+
+
 Moteur   * Moteur::_mot = NULL;
 Renderer * Moteur::_renderer = NULL;
 
@@ -151,24 +153,7 @@ void Moteur::start()
 void Moteur::keyboard_handler(GLFWwindow *, int key, int, int action, int)
 {
     switch (key) {
-
-        case GLFW_KEY_A:
-        case GLFW_KEY_W:
-        case GLFW_KEY_D:
-        case GLFW_KEY_S:
-        case GLFW_KEY_Q:
-        case GLFW_KEY_Z:
-        case GLFW_KEY_R:
-        case GLFW_KEY_UP:
-        case GLFW_KEY_LEFT:
-        case GLFW_KEY_RIGHT:
-        case GLFW_KEY_DOWN:
-        case GLFW_KEY_PAGE_UP:
-        case GLFW_KEY_PAGE_DOWN:
-        case GLFW_KEY_SPACE:
-            _mot->_world->touche(key, action);
-        break;
-
+        
         case GLFW_KEY_ESCAPE: 
             glfwSetWindowShouldClose(_mot->_window, GL_TRUE);                 
         break; 
@@ -196,7 +181,7 @@ void Moteur::keyboard_handler(GLFWwindow *, int key, int, int action, int)
         break;
 
         default:
-        std::cout << "Key pressed " << key << std::endl;
+            _mot->_world->touche(key, action);
     }
 }
 
@@ -243,6 +228,7 @@ void  Moteur::init_scene()
 {
     _renderer = Renderer::create();
     _world = new World(_renderer);
+
 }
 
 

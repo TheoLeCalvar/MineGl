@@ -1,8 +1,8 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#define WORLDSIZEX 129
-#define WORLDSIZEY 129
+#define WORLDSIZEX 257
+#define WORLDSIZEY 257
 #define WORLDSIZEZ 128
 #define WATER_LEVEL 50
 
@@ -29,6 +29,8 @@ class Luciole;
 #include "dirt.hpp"
 #include "water.hpp"
 
+#include "model.hpp"
+
 
 class World
 {
@@ -43,6 +45,7 @@ private:
 
 	Player * 					_player;
 	Luciole * 					_luciole;
+	Model * 					_modele;
 
 public:
 	World(Renderer * renderer);
@@ -50,7 +53,7 @@ public:
 
 	void 			draw();
 	void 			touche(int key, int action);
-	unsigned int	hauteur(int x, int y);
+	unsigned int	hauteur(unsigned int x, unsigned int y);
 	bool			empty(float x, float y, float z);
 	bool 			empty(Vect3D p);
 	Cube::cube_type getCubeType(unsigned int x, unsigned int y, unsigned int z);
