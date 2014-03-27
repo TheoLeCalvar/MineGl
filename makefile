@@ -7,7 +7,7 @@ ZIP = openGL.zip
 UNAME = $(shell uname)
 
 ifeq ($(UNAME), Darwin)
-CXXFLAGS = -O3 -Wall -Wextra -g 
+CXXFLAGS = -O3 -Wall -g 
 LDFLAGS = -framework OpenGL -framework ApplicationServices -lSOIL -L/usr/local/lib -lglfw3
 endif
 

@@ -394,7 +394,7 @@ void World::genHeight()
 
 void World::calcVisibility()
 {
-	long x, y, z;
+	unsigned int x, y, z;
 	std::vector<Cube *>::iterator i;
 
 	for (x = 0, y = 0, z = 0, i = _blocs.begin(); i != _blocs.end(); ++i)
@@ -419,7 +419,7 @@ void World::calcVisibility()
 				);
 			if (((z < WORLDSIZEZ-1) && !_blocs[XYZ(x, y, z+1)]) && dynamic_cast<Dirt *>((*i)))
 			{
-				char vis = (*i)->getVisibility();
+				unsigned char vis = (*i)->getVisibility();
 				delete *i;
 				*i = new Grass(vis);
 			}

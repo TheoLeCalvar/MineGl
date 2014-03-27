@@ -29,8 +29,6 @@ class Luciole;
 #include "dirt.hpp"
 #include "water.hpp"
 
-#include "model.hpp"
-
 
 class World
 {

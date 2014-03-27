@@ -117,7 +117,7 @@ public:
 		GLdouble len;
 
 		len = length();
-		if (len) {
+		if (len < 0.001f) {
 			a[0] /= len;;
 			a[1] /= len;
 			a[2] /= len;
@@ -137,14 +137,14 @@ public:
 		a[2] = z;
 		a[3] = w;	
 	}
-	Vect4D 	scalarMult(T a)
+	Vect4D 	scalarMult(T c)
 	{
 		Vect4D res;
 
-		res.a[0] = a[0] * a;
-		res.a[1] = a[1] * a;
-		res.a[2] = a[2] * a;
-		res.a[3] = a[3] * a;
+		res.a[0] = a[0] * c;
+		res.a[1] = a[1] * c;
+		res.a[2] = a[2] * c;
+		res.a[3] = a[3] * c;
 
 		return res;
 	}

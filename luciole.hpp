@@ -7,7 +7,7 @@
 	#include <GL/gl.h>
 #endif
 
-#include "Vect3D.hpp"
+#include "vect3D.hpp"
 #include "world.hpp"
 
 #define LUCIOLE_HEIGHT 0.10f

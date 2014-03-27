@@ -6,7 +6,7 @@
 
 #include "vect3D.hpp"
 
-int main(int argc, char **argv)
+int main(int , char **)
 {
 	srand( static_cast<unsigned> (time(0)));
 
