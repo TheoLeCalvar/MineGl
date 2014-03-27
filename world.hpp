@@ -1,8 +1,8 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#define WORLDSIZEX 257
-#define WORLDSIZEY 257
+#define WORLDSIZEX 129
+#define WORLDSIZEY 129
 #define WORLDSIZEZ 128
 #define WATER_LEVEL 50
 
