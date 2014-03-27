@@ -45,7 +45,6 @@ private:
 
 	Player * 					_player;
 	Luciole * 					_luciole;
-	Model * 					_modele;
 
 public:
 	World(Renderer * renderer);

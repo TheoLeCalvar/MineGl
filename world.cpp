@@ -31,7 +31,7 @@ _renderer(renderer), _listId(0)
 
 	_player = new Player(this);
 	_luciole = new Luciole(this);
-	_modele = new Model("modele/flutter.obj");
+
 }
 
 World::~World()
@@ -86,7 +86,7 @@ void World::sun()
 		glEnd();
 
 
-		GLfloat lum_amb[] = {0.4f, 0.4f, 0.4f, 1.0f};
+		GLfloat lum_amb[] = {0.8f, 0.8f, 0.8f, 1.0f};
 		GLfloat lum_pos[] = {0.0f, 0.0f, 1.0f, 0.0f};
 		GLfloat lum_dif[] = {0.6f, 0.6f, 0.6f, 1.0f};
 
@@ -103,13 +103,6 @@ void World::sun()
 void World::draw()
 {	
 	_player->display();
-
-	// glPushMatrix();
-
-	// glTranslatef(0.0f, 0.0f, 0.0f);
-	// _modele->draw();
-
-	// glPopMatrix();
 
 	sun();
 

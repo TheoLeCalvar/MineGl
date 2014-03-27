@@ -6,13 +6,15 @@
 
 Model::Model(const std::string & file)
 {
+	parse(file);
+}
+
+void Model::parse(const std::string & file)
+{
 	std::ifstream objFile(file);
 	std::string   ligne, nom;
 	Groupe * 	  g;
-	
-	std::vector<GLfloat> vertices;
-	std::vector<GLfloat> normals;
-	std::vector<GLfloat> texCoord;
+
 
 	while(std::getline(objFile, ligne))
 	{
@@ -55,15 +57,16 @@ Model::Model(const std::string & file)
 				}
 				else
 				{
+					std::cout << "Set material " << search->first << " for " << nom << std::endl;
 					g->setMaterial(search->second);
 				}
 
 			}
-			else if (mot == "o")
+			else if (mot == "o" || mot == "g")
 			{
 				nom.clear();
 				ss >> nom;
-				g = new Groupe();
+				g = new Groupe(&_vertices, &_normals, &_texCoord);
 				_groupes.insert(std::pair<const std::string, Groupe *>(nom, g));
 				std::cout << "Nouvel objet (" << nom << ")" << std::endl;
 			}
@@ -73,7 +76,9 @@ Model::Model(const std::string & file)
 
 				ss >> x >> y >> z;
 
-				g->addVertex(x, y, z);
+				_vertices.push_back(x);
+				_vertices.push_back(y);
+				_vertices.push_back(z);
 
 			}
 			else if (mot == "vn")
@@ -82,7 +87,9 @@ Model::Model(const std::string & file)
 
 				ss >> x >> y >> z;
 
-				g->addNormal(x, y, z);
+				_normals.push_back(x);
+				_normals.push_back(y);
+				_normals.push_back(z);
 			}
 			else if (mot == "vt")
 			{
@@ -90,7 +97,8 @@ Model::Model(const std::string & file)
 
 				ss >> u >> v;
 
-				g->addTexCoord(u, v);
+				_texCoord.push_back(u);
+				_texCoord.push_back(v);
 			}
 			else if (mot == "f")
 			{
@@ -134,11 +142,10 @@ Model::~Model()
 
 void Model::draw()
 {
-	// for (std::map<const std::string, Groupe *>::iterator i = _groupes.begin(); i != _groupes.end(); ++i)
-	// {
-	// 	i->second->draw();
-	// }
-	_groupes.begin()->second->draw();
+	for (std::map<const std::string, Groupe *>::iterator i = _groupes.begin(); i != _groupes.end(); ++i)
+	{
+		i->second->draw();
+	}
 }
 
 void Model::loadMtl(const std::string & path)
@@ -189,7 +196,7 @@ void Model::loadMtl(const std::string & path)
 
 
 
-Groupe::Groupe():_mat(NULL), _callId(0)
+Groupe::Groupe(std::vector<GLfloat> * vertices, std::vector<GLfloat> * normals, std::vector<GLfloat> * texCoord):_vertices(vertices), _normals(normals), _texCoord(texCoord), _mat(NULL), _callId(0)
 {}
 
 Groupe::~Groupe()
@@ -200,26 +207,6 @@ void Groupe::setMaterial(Material * m)
 	_mat = m;
 }
 
-void Groupe::addVertex(GLfloat x, GLfloat y, GLfloat z)
-{
-	_vertices.push_back(x);
-	_vertices.push_back(y);
-	_vertices.push_back(z);
-}
-
-void Groupe::addNormal(GLfloat x, GLfloat y, GLfloat z)
-{
-	_normals.push_back(x);
-	_normals.push_back(y);
-	_normals.push_back(z);
-}
-
-void Groupe::addTexCoord(GLfloat u, GLfloat v)
-{
-	_texCoord.push_back(u);
-	_texCoord.push_back(v);
-}
-
 void Groupe::addFace(unsigned int v, unsigned int n, unsigned int t)
 {
 	_faces.push_back(v);
@@ -227,15 +214,12 @@ void Groupe::addFace(unsigned int v, unsigned int n, unsigned int t)
 	_faces.push_back(t);
 }
 
-void Groupe::addVertexNormalTex(GLfloat vx, GLfloat vy, GLfloat vz, GLfloat nx, GLfloat ny, GLfloat nz, GLfloat u, GLfloat v)
-{
-	addVertex(vx, vy, vz);
-	addNormal(nx, ny, nz);
-	addTexCoord(u, v);
-}
 
 void Groupe::draw()
 {
+	glFrontFace(GL_CW);
+	glDisable(GL_BLEND);
+
 	if (_callId)
 	{
 		glCallList(_callId);
@@ -253,13 +237,15 @@ void Groupe::draw()
 			glBegin(GL_TRIANGLES);
 				for (unsigned int i = 0; i*3 < _faces.size(); ++i)
 				{
-					std::cout << (_faces[i*3]-1) << ", " <<_vertices[(_faces[i*3]-1)*3] << ", " << _vertices[(_faces[i*3]-1)*3 +1]  << ", " << _vertices[(_faces[i*3]-1)*3 + 2] << std::endl;
-					glNormal3fv(	_normals.data()  + 	(_faces[i*3 + 1]-1)*3);
-					glTexCoord2fv(	_texCoord.data() + 	(_faces[i*3 + 2]-1)*2);
-					glVertex3fv(	_vertices.data() + 	(_faces[i*3]-1)*3);
+					glNormal3fv(	_normals->data()  + 	(_faces[i*3 + 1]-1)*3);
+					glTexCoord2fv(	_texCoord->data() + 	(_faces[i*3 + 2]-1)*2);
+					glVertex3fv(	_vertices->data() + 	(_faces[i*3]-1)*3);
 				}
 			glEnd();
 
 		glEndList();
 	}
+
+
+	glFrontFace(GL_CCW);
 }
