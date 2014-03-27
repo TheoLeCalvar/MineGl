@@ -1,6 +1,7 @@
 #include "player.hpp"
 
 #include <iostream>
+#include <cstdlib>
 
 Vect3D Player::_gravity(0.0f, 0.0f, 0.02f);
 
