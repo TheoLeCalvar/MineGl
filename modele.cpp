@@ -236,7 +236,6 @@ void Groupe::addFace(unsigned int v, unsigned int t, unsigned int n)
 
 void Groupe::draw()
 {
-	glFrontFace(GL_CW);
 	glDisable(GL_BLEND);
 
 	if (_callId)
@@ -268,7 +267,4 @@ void Groupe::draw()
 
 		glEndList();
 	}
-
-
-	glFrontFace(GL_CCW);
 }

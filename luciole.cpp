@@ -163,13 +163,6 @@ void Luciole::draw()
 	static GLfloat 		emission_wing[] =  {0.0f, 0.0f, 0.0f, 1.0f};
 	static GLfloat 		shininess_wing = 0.0f;
 
-	//matériaux de la zone lumineuse
-	static GLfloat 		ambient_light[] = {171/255.0f, 255/255.0f, 46/255.0f, 1.0f};
-	static GLfloat 		diffuse_light[] = {171/255.0f, 255/255.0f, 46/255.0f, 1.0f};
-	static GLfloat		specular_light[] = {0.0f, 0.0f, 0.0f, 1.0f};
-	static GLfloat 		emission_light[] =  {171/255.0f, 255/255.0f, 46/255.0f, 1.0f};
-	static GLfloat 		shininess_light = 0.0f;
-
 	static GLfloat 		lumPos[] = {LUCIOLE_LENGHT/8, LUCIOLE_WIDTH / 4, LUCIOLE_HEIGHT / 4, 1.0f};
 	static GLfloat 		lumAmb[] = {0.0f, 0.0f, 0.0f, 0.0f};
 	static GLfloat 		lumDif[] = {171/255.0f, 255/255.0f, 46/255.0f, 1.0f};
@@ -207,36 +200,22 @@ void Luciole::draw()
 
 		//bout fluorescent
 		glPushMatrix();
-			// glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient_light);
-			// glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse_light);
-			// glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_light);
-			// glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_light);
-			// glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess_light);
-
-
-			// glTranslatef(LUCIOLE_LENGHT, LUCIOLE_WIDTH / 4, LUCIOLE_HEIGHT / 4);
-
-			// glEnableClientState(GL_VERTEX_ARRAY);
-			// glVertexPointer(3, GL_FLOAT, 0, _light);
-
-			// glEnableClientState(GL_NORMAL_ARRAY);
-			// glNormalPointer(GL_FLOAT, 0, _light+24);
-
-			// glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, _lightIndices);
-
-			// glDisableClientState(GL_NORMAL_ARRAY);
-			// glDisableClientState(GL_VERTEX_ARRAY);
-
-
-			// glLightfv(GL_LIGHT2 + _id, GL_POSITION, lumPos);
-			// glLightfv(GL_LIGHT2 + _id, GL_AMBIENT , lumAmb);
-			// glLightfv(GL_LIGHT2 + _id, GL_DIFFUSE, lumDif);
-			// glLightfv(GL_LIGHT2 + _id, GL_SPECULAR, lumSpe);
-			// glLightf(GL_LIGHT2 + _id, GL_LINEAR_ATTENUATION, 0.7f);
-
-			// glEnable(GL_LIGHT2 + _id);
+			
+			glTranslatef(0.0f, LUCIOLE_WIDTH/2.0f, LUCIOLE_HEIGHT);
+			glRotatef(90, 0.0f, 0.0f, 1.0f);
+			glScalef(0.1f, 0.1f, 0.1f);
 
 			_light->draw();
+
+			glLightfv(GL_LIGHT2 + _id, GL_POSITION, lumPos);
+			glLightfv(GL_LIGHT2 + _id, GL_AMBIENT , lumAmb);
+			glLightfv(GL_LIGHT2 + _id, GL_DIFFUSE, lumDif);
+			glLightfv(GL_LIGHT2 + _id, GL_SPECULAR, lumSpe);
+			glLightf(GL_LIGHT2 + _id, GL_LINEAR_ATTENUATION, 0.7f);
+
+			glEnable(GL_LIGHT2 + _id);
+
+
 
 
 		glPopMatrix();
@@ -284,7 +263,7 @@ void Luciole::draw()
 	glPopMatrix();
 
 
-	AI();
+	// AI();
 
 
 	if (_frame < 30)

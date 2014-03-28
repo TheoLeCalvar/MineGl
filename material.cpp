@@ -63,6 +63,14 @@ Material::Material(const std::string & texte)
 
 			std::cout << "Kd found (value " << _diffuse[0] << "," << _diffuse[1] << "," << _diffuse[2] <<  ")" << std::endl;			
 		}
+		else if (mot == "Ke")
+		{
+			ss >> _emission[0];
+			ss >> _emission[1];
+			ss >> _emission[2];
+
+			std::cout << "Kd found (value " << _emission[0] << "," << _emission[1] << "," << _emission[2] <<  ")" << std::endl;			
+		}
 		else if (mot == "Ks")
 		{
 			ss >> _specular[0];
