@@ -6,7 +6,7 @@
 Vect3D Player::_gravity(0.0f, 0.0f, 0.02f);
 
 
-Player::Player(World * w):_world(w), _fly(false), _v(0.0f,0.0f,0.0f), _jump(false), _espace_presse(false)
+Player::Player(World * w):Luciole(w), _world(w), _fly(false), _v(0.0f,0.0f,0.0f), _jump(false), _espace_presse(false)
 {
 	spawn();
 }
@@ -18,6 +18,7 @@ void Player::spawn()
 	int x = rand() % WORLDSIZEX, y = rand() % WORLDSIZEY, z = _world->hauteur(x, y) + 3.0f;
 
 	_eye(x, y, z);
+
 }
 
 
@@ -79,7 +80,7 @@ void 	Player::move()
 	}
 	else
 	{
-		Vect3D av(cos(_theta * M_PI/180), sin(_theta * M_PI/180), 0.0f);
+		Vect3D av(cos(Camera::_theta * M_PI/180), sin(Camera::_theta * M_PI/180), 0.0f);
 		av.normalize();
 		Vect3D s =  _haut * av;
 		s.normalize();

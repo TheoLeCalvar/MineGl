@@ -51,6 +51,7 @@ public:
 	static Renderer * 	create();
 	static void 		destroy();
 	void 		clean();
+	void 		reset();
 
 	void 		addVertex(GLfloat x, GLfloat y, GLfloat z);
 	void 		addVertex(GLfloat *v);

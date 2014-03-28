@@ -3,6 +3,9 @@
 #include <cmath>
 #include <iostream>
 
+int Luciole::_NbLucioles = 0;
+Modele * Luciole::_light = NULL;
+
 //vertex 
 //normals
 GLfloat Luciole::_body[] =
@@ -58,53 +61,66 @@ GLubyte Luciole::_wingIndices[] =
 	4, 0, 1
 };
 
-GLfloat Luciole::_light[] =
-{
-	LUCIOLE_LENGHT / 4, 0.0f, 				LUCIOLE_HEIGHT/2,
-	LUCIOLE_LENGHT / 4, 0.0f, 				0.0f,
-	LUCIOLE_LENGHT / 4,	LUCIOLE_WIDTH/2, 	0.0f,
-	LUCIOLE_LENGHT / 4, LUCIOLE_WIDTH/2, 	LUCIOLE_HEIGHT/2,
-	0.0f, 				0.0f,				LUCIOLE_HEIGHT/2,
-	0.0f, 				0.0f,				0.0f,
-	0.0f, 				LUCIOLE_WIDTH/2,	0.0f,
-	0.0f, 				LUCIOLE_WIDTH/2,	LUCIOLE_HEIGHT/2,
-	SQRT3, 				-SQRT3, 			SQRT3,
-	SQRT3, 				-SQRT3, 			-SQRT3,
-	SQRT3, 				SQRT3, 				-SQRT3,
-	SQRT3, 				SQRT3, 				SQRT3,
-	-SQRT3, 			-SQRT3, 			SQRT3,
-	-SQRT3, 			-SQRT3, 			-SQRT3,
-	-SQRT3, 			SQRT3, 				-SQRT3,
-	-SQRT3, 			SQRT3, 				SQRT3
-};
+// GLfloat Luciole::_light[] =
+// {
+// 	LUCIOLE_LENGHT / 4, 0.0f, 				LUCIOLE_HEIGHT/2,
+// 	LUCIOLE_LENGHT / 4, 0.0f, 				0.0f,
+// 	LUCIOLE_LENGHT / 4,	LUCIOLE_WIDTH/2, 	0.0f,
+// 	LUCIOLE_LENGHT / 4, LUCIOLE_WIDTH/2, 	LUCIOLE_HEIGHT/2,
+// 	0.0f, 				0.0f,				LUCIOLE_HEIGHT/2,
+// 	0.0f, 				0.0f,				0.0f,
+// 	0.0f, 				LUCIOLE_WIDTH/2,	0.0f,
+// 	0.0f, 				LUCIOLE_WIDTH/2,	LUCIOLE_HEIGHT/2,
+// 	SQRT3, 				-SQRT3, 			SQRT3,
+// 	SQRT3, 				-SQRT3, 			-SQRT3,
+// 	SQRT3, 				SQRT3, 				-SQRT3,
+// 	SQRT3, 				SQRT3, 				SQRT3,
+// 	-SQRT3, 			-SQRT3, 			SQRT3,
+// 	-SQRT3, 			-SQRT3, 			-SQRT3,
+// 	-SQRT3, 			SQRT3, 				-SQRT3,
+// 	-SQRT3, 			SQRT3, 				SQRT3
+// };
 
-GLubyte Luciole::_lightIndices[] =
-{
-	0, 1, 2, 	0, 2, 3,
-	3, 2, 6, 	3, 6, 7,
-	7, 6, 5, 	7, 5, 4,
-	4, 5, 1, 	4, 1, 0,
-	7, 4, 0, 	7, 0, 3,
-	6, 2, 1, 	6, 1, 5  
-};
+// GLubyte Luciole::_lightIndices[] =
+// {
+// 	0, 1, 2, 	0, 2, 3,
+// 	3, 2, 6, 	3, 6, 7,
+// 	7, 6, 5, 	7, 5, 4,
+// 	4, 5, 1, 	4, 1, 0,
+// 	7, 4, 0, 	7, 0, 3,
+// 	6, 2, 1, 	6, 1, 5  
+// };
 
 
 Luciole::Luciole(World * w, const Vect3D &pos, GLfloat theta, GLfloat phi):
-	_world(w), _pos(pos), _theta(theta), _phi(phi), _alpha(45.0f)
+	_world(w), _pos(pos), _theta(theta), _phi(phi), _thetaCible(theta), _thetaOrig(theta), _thetaFrame(0), _phiCible(_phi), _phiOrig(_phi), _phiFrame(0), _alpha(45.0f)
 {
+	if (!_light)
+	{
+		_light = new Modele("modele/sphere.obj");
+		_light->useTex(false);
+	}
+
+	_id = ++_NbLucioles;
 	spawn();
 }
 
 Luciole::Luciole(World * w):
 	_world(w), _theta(0.0f), _phi(0.0f), _alpha(45.0f), _frame(0)
 {
+	if (!_light)
+	{
+		_light = new Modele("modele/sphere.obj");
+		_light->useTex(false);
+	}
+
 	spawn();
 }
 
 
 Luciole::~Luciole()
 {
-	spawn();
+	_NbLucioles--;
 }
 
 void Luciole::spawn()
@@ -191,34 +207,36 @@ void Luciole::draw()
 
 		//bout fluorescent
 		glPushMatrix();
-			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient_light);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse_light);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_light);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_light);
-			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess_light);
+			// glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient_light);
+			// glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse_light);
+			// glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_light);
+			// glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_light);
+			// glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess_light);
 
 
-			glTranslatef(LUCIOLE_LENGHT, LUCIOLE_WIDTH / 4, LUCIOLE_HEIGHT / 4);
+			// glTranslatef(LUCIOLE_LENGHT, LUCIOLE_WIDTH / 4, LUCIOLE_HEIGHT / 4);
 
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glVertexPointer(3, GL_FLOAT, 0, _light);
+			// glEnableClientState(GL_VERTEX_ARRAY);
+			// glVertexPointer(3, GL_FLOAT, 0, _light);
 
-			glEnableClientState(GL_NORMAL_ARRAY);
-			glNormalPointer(GL_FLOAT, 0, _light+24);
+			// glEnableClientState(GL_NORMAL_ARRAY);
+			// glNormalPointer(GL_FLOAT, 0, _light+24);
 
-			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, _lightIndices);
+			// glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, _lightIndices);
 
-			glDisableClientState(GL_NORMAL_ARRAY);
-			glDisableClientState(GL_VERTEX_ARRAY);
+			// glDisableClientState(GL_NORMAL_ARRAY);
+			// glDisableClientState(GL_VERTEX_ARRAY);
 
 
-			glLightfv(GL_LIGHT2, GL_POSITION, lumPos);
-			glLightfv(GL_LIGHT2, GL_AMBIENT , lumAmb);
-			glLightfv(GL_LIGHT2, GL_DIFFUSE, lumDif);
-			glLightfv(GL_LIGHT2, GL_SPECULAR, lumSpe);
-			glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.7f);
+			// glLightfv(GL_LIGHT2 + _id, GL_POSITION, lumPos);
+			// glLightfv(GL_LIGHT2 + _id, GL_AMBIENT , lumAmb);
+			// glLightfv(GL_LIGHT2 + _id, GL_DIFFUSE, lumDif);
+			// glLightfv(GL_LIGHT2 + _id, GL_SPECULAR, lumSpe);
+			// glLightf(GL_LIGHT2 + _id, GL_LINEAR_ATTENUATION, 0.7f);
 
-			glEnable(GL_LIGHT2);
+			// glEnable(GL_LIGHT2 + _id);
+
+			_light->draw();
 
 
 		glPopMatrix();
@@ -283,26 +301,24 @@ void Luciole::draw()
 
 void Luciole::AI()
 {
-	static GLdouble thetaCible = _theta;
-	static GLdouble thetaOrig = _theta;
-	static GLdouble phiCible = _phi;
-	static GLdouble phiOrig = _phi;
 
-	if (fabs(_theta - thetaCible) < 0.1f)
+	if (fabs(_theta - _thetaCible) < 0.1f)
 	{
-		thetaCible = static_cast<GLdouble>(rand() % 360);
-		thetaOrig = _theta;
+		_thetaCible = static_cast<GLdouble>(rand() % 360);
+		_thetaOrig = _theta;
+		_thetaFrame = 32 + rand() % 100;
 	}
 
-	if (fabs(_phi - phiCible) < 0.1f)
+	if (fabs(_phi - _phiCible) < 0.1f)
 	{
-		phiCible = static_cast<GLdouble>((rand() % 180) - 90);
-		phiOrig = _phi;
+		_phiCible = static_cast<GLdouble>((rand() % 180) - 90);
+		_phiOrig = _phi;
+		_phiFrame = 32 + rand() % 100;
 	}
 
 
-	_phi += (phiCible - phiOrig)/64.f;
-	_theta += (thetaCible - thetaOrig)/64.0f;
+	_phi += (_phiCible - _phiOrig)/_phiFrame;
+	_theta += (_thetaCible - _thetaOrig)/_thetaFrame;
 
 
 	double tmp = cos(_phi * M_PI/180);
@@ -319,8 +335,9 @@ void Luciole::AI()
 		_pos -= avant*0.05f;
 		_pos[2] = _world->hauteur(static_cast<unsigned int>(_pos[0]), static_cast<unsigned int>(_pos[1])) + 1.2f;
 
-		phiCible = -1 * static_cast<GLdouble>(rand() % 90);
-		phiOrig = _phi;	
+		_phiCible = -1 * static_cast<GLdouble>(rand() % 90);
+		_phiFrame = 32 + rand() % 100;
+		_phiOrig = _phi;	
 	}
 }
 

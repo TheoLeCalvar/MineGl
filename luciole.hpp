@@ -9,6 +9,7 @@
 
 #include "vect3D.hpp"
 #include "world.hpp"
+#include "modele.hpp"
 
 #define LUCIOLE_HEIGHT 0.10f
 #define LUCIOLE_WIDTH  0.10f
@@ -18,11 +19,24 @@
 
 class Luciole
 {
+	static int  _NbLucioles;
 	World * 	_world;
+	int 		_id;
 
 	Vect3D 		_pos;
 	GLdouble 	_theta;
 	GLdouble 	_phi;
+
+	GLdouble 	_thetaCible;
+	GLdouble 	_thetaOrig;
+	char 		_thetaFrame;
+
+	GLdouble 	_phiCible;
+	GLdouble 	_phiOrig;
+	char 		_phiFrame;
+
+
+
 	//wing angle
 	GLdouble 	_alpha;
 	char 		_frame;
@@ -31,8 +45,10 @@ class Luciole
 	static GLubyte 	_bodyIndices[];
 	static GLfloat 	_wing[];
 	static GLubyte 	_wingIndices[];
-	static GLfloat 	_light[];
-	static GLubyte	_lightIndices[];
+	// static GLfloat 	_light[];
+	// static GLubyte	_lightIndices[];
+
+	static Modele * _light;
 
 
 public:

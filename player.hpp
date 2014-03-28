@@ -1,12 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-
+#include "luciole.hpp"
 #include "camera.hpp"
 #include "vect3D.hpp"
 #include "world.hpp"
 
-class Player: public Camera
+class Player: public Camera, public Luciole
 {
 private:
 	World * 	_world;

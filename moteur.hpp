@@ -14,7 +14,7 @@
 
 #include <GLFW/glfw3.h>
 #include <vector>
-#include "objet.hpp"
+
 #include "vect3D.hpp"
 #include "renderer.hpp"
 #include "world.hpp"

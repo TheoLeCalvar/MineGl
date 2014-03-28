@@ -45,6 +45,20 @@ void 		Renderer::clean()
 
 }
 
+void 		Renderer::reset()
+{
+	clean();
+
+	if (_bufSize)
+	{
+		delete _buffer;
+	}
+
+
+	_bufSize = 0x10000;
+	_buffer = new GLfloat[_bufSize];
+}
+
 void 		Renderer::setBlending(bool b)
 {
 	if (b)

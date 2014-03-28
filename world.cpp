@@ -30,7 +30,11 @@ _renderer(renderer), _listId(0)
 
 
 	_player = new Player(this);
-	_luciole = new Luciole(this);
+	
+	for (int i = 0; i < 3; ++i)
+	{
+		_lucioles[i] = new Luciole(this);
+	}
 
 }
 
@@ -51,7 +55,7 @@ void World::touche(int key, int action)
 	switch (key)
 	{
 		case GLFW_KEY_T:
-			_player->go(_luciole->getPos());
+			_player->go(_lucioles[0]->getPos());
 		break;
 
 
@@ -167,6 +171,7 @@ void World::draw()
 			_renderer->display();
 			
 		glEndList();
+		_renderer->clean();
 	}
 
 	static GLfloat ambient[] = {0.1f, 0.15f, 0.35f, 1.0f};
@@ -197,7 +202,11 @@ void World::draw()
 
 	_renderer->display();
 
-	_luciole->draw();
+	for (int i = 0; i < 3; ++i)
+	{
+		_lucioles[i]->draw();
+	}
+	
 
 	Water::inc();
 }

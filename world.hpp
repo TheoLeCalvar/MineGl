@@ -42,7 +42,7 @@ private:
 
 
 	Player * 					_player;
-	Luciole * 					_luciole;
+	Luciole * 					_lucioles[3];
 
 public:
 	World(Renderer * renderer);
