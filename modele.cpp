@@ -154,7 +154,7 @@ void Modele::draw()
 
 void Modele::loadMtl(const std::string & path)
 {
-	std::ifstream matFile(path);
+	std::ifstream matFile(path.c_str());
 	std::string ligne, buffer, nom;
 
 	while(std::getline(matFile, ligne))
