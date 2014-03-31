@@ -11,7 +11,7 @@ Modele::Modele(const std::string & file)
 
 void Modele::parse(const std::string & file)
 {
-	std::ifstream objFile(file);
+	std::ifstream objFile(file.c_str());
 	std::string   ligne, nom;
 	Groupe * 	  g;
 
