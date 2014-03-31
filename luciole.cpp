@@ -61,39 +61,14 @@ GLubyte Luciole::_wingIndices[] =
 	4, 0, 1
 };
 
-// GLfloat Luciole::_light[] =
-// {
-// 	LUCIOLE_LENGHT / 4, 0.0f, 				LUCIOLE_HEIGHT/2,
-// 	LUCIOLE_LENGHT / 4, 0.0f, 				0.0f,
-// 	LUCIOLE_LENGHT / 4,	LUCIOLE_WIDTH/2, 	0.0f,
-// 	LUCIOLE_LENGHT / 4, LUCIOLE_WIDTH/2, 	LUCIOLE_HEIGHT/2,
-// 	0.0f, 				0.0f,				LUCIOLE_HEIGHT/2,
-// 	0.0f, 				0.0f,				0.0f,
-// 	0.0f, 				LUCIOLE_WIDTH/2,	0.0f,
-// 	0.0f, 				LUCIOLE_WIDTH/2,	LUCIOLE_HEIGHT/2,
-// 	SQRT3, 				-SQRT3, 			SQRT3,
-// 	SQRT3, 				-SQRT3, 			-SQRT3,
-// 	SQRT3, 				SQRT3, 				-SQRT3,
-// 	SQRT3, 				SQRT3, 				SQRT3,
-// 	-SQRT3, 			-SQRT3, 			SQRT3,
-// 	-SQRT3, 			-SQRT3, 			-SQRT3,
-// 	-SQRT3, 			SQRT3, 				-SQRT3,
-// 	-SQRT3, 			SQRT3, 				SQRT3
-// };
-
-// GLubyte Luciole::_lightIndices[] =
-// {
-// 	0, 1, 2, 	0, 2, 3,
-// 	3, 2, 6, 	3, 6, 7,
-// 	7, 6, 5, 	7, 5, 4,
-// 	4, 5, 1, 	4, 1, 0,
-// 	7, 4, 0, 	7, 0, 3,
-// 	6, 2, 1, 	6, 1, 5  
-// };
-
 
 Luciole::Luciole(World * w, const Vect3D &pos, GLfloat theta, GLfloat phi):
-	_world(w), _pos(pos), _theta(theta), _phi(phi), _thetaCible(theta), _thetaOrig(theta), _thetaFrame(0), _phiCible(_phi), _phiOrig(_phi), _phiFrame(0), _alpha(45.0f)
+	_world(w), _pos(pos),
+	_theta(theta), _phi(phi), 
+	_thetaCible(theta), _thetaOrig(theta), _thetaFrame(0),
+	_phiCible(_phi), _phiOrig(_phi), _phiFrame(0), 
+	_enabled(true),
+	_alpha(45.0f)
 {
 	if (!_light)
 	{
@@ -106,7 +81,9 @@ Luciole::Luciole(World * w, const Vect3D &pos, GLfloat theta, GLfloat phi):
 }
 
 Luciole::Luciole(World * w):
-	_world(w), _theta(0.0f), _phi(0.0f), _alpha(45.0f), _frame(0)
+	_world(w), _theta(0.0f), _phi(0.0f),
+	_enabled(true),
+	_alpha(45.0f), _frame(0)
 {
 	if (!_light)
 	{
@@ -125,24 +102,9 @@ Luciole::~Luciole()
 
 void Luciole::spawn()
 {
-	//on cherche un bloc d'eau
-	int x = WORLDSIZEX/ 2, y = WORLDSIZEY / 2, z = 0;
-	int xL, yL, zL;
+	int x = rand() % WORLDSIZEX, y = rand() % WORLDSIZEY, z = _world->hauteur(x, y) + 3.0f;
 
-	z = _world->hauteur(x, y);
-
-	while(true)
-	{
-		xL = (rand() % 9) - 5;
-		yL = (rand() % 9) - 5;
-		zL = (rand() % 3) + 2;
-
-		if (_world->empty(x + xL, y + yL, z + zL))
-		{
-			_pos(static_cast<GLdouble>(x + xL), static_cast<GLdouble>(y + yL), static_cast<GLdouble>(z + zL));
-			return;
-		}
-	}
+	_pos(x, y, z);
 
 }
 
@@ -201,11 +163,12 @@ void Luciole::draw()
 		//bout fluorescent
 		glPushMatrix();
 			
-			glTranslatef(0.0f, LUCIOLE_WIDTH/2.0f, LUCIOLE_HEIGHT);
-			glRotatef(90, 0.0f, 0.0f, 1.0f);
+			glTranslatef(LUCIOLE_LENGHT, LUCIOLE_WIDTH/2.0f, LUCIOLE_HEIGHT);
+			glRotatef(-90, 0.0f, 0.0f, 1.0f);
 			glScalef(0.1f, 0.1f, 0.1f);
 
 			_light->draw();
+
 
 			glLightfv(GL_LIGHT2 + _id, GL_POSITION, lumPos);
 			glLightfv(GL_LIGHT2 + _id, GL_AMBIENT , lumAmb);
@@ -213,7 +176,15 @@ void Luciole::draw()
 			glLightfv(GL_LIGHT2 + _id, GL_SPECULAR, lumSpe);
 			glLightf(GL_LIGHT2 + _id, GL_LINEAR_ATTENUATION, 0.7f);
 
-			glEnable(GL_LIGHT2 + _id);
+			if (_enabled)
+			{
+				glEnable(GL_LIGHT2 + _id);
+			}
+			else
+			{
+				glDisable(GL_LIGHT2 + _id);
+			}
+
 
 
 
@@ -261,9 +232,6 @@ void Luciole::draw()
 			glPopMatrix();
 		glPopMatrix();
 	glPopMatrix();
-
-
-	// AI();
 
 
 	if (_frame < 30)

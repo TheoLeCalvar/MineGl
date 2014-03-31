@@ -27,6 +27,7 @@ public:
 	GLfloat  getPositionY(){return _eye[1];}
 	GLfloat  getPositionZ(){return _eye[2];}
 	void	 go(Vect3D v){_eye = v;}
+	void 	 draw();
 
 protected:
 	virtual void 	move();

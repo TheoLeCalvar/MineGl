@@ -23,10 +23,12 @@ class Luciole
 	World * 	_world;
 	int 		_id;
 
+protected:
 	Vect3D 		_pos;
 	GLdouble 	_theta;
 	GLdouble 	_phi;
 
+private:
 	GLdouble 	_thetaCible;
 	GLdouble 	_thetaOrig;
 	char 		_thetaFrame;
@@ -35,7 +37,7 @@ class Luciole
 	GLdouble 	_phiOrig;
 	char 		_phiFrame;
 
-
+	bool        _enabled;
 
 	//wing angle
 	GLdouble 	_alpha;
@@ -57,9 +59,10 @@ public:
 	~Luciole();
 	
 
-	void draw();
-	void AI();
-	Vect3D getPos();
+	virtual void draw();
+	void 	AI();
+	Vect3D 	getPos();
+	void 	light(bool b){_enabled = b;}
 
 private:
 	void spawn();

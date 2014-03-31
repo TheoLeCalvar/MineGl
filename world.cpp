@@ -58,6 +58,21 @@ void World::touche(int key, int action)
 			_player->go(_lucioles[0]->getPos());
 		break;
 
+		case GLFW_KEY_4:
+		{
+			if (action == (GLFW_PRESS))
+			{
+				static bool b = false;
+				for(int i = 0; i < 3; ++i)
+					_lucioles[i]->light(b);
+
+				_player->light(b);
+
+				b = !b;
+			}
+
+		}
+
 
 		default:
 			_player->toucheJoueur(key, action);
@@ -205,7 +220,10 @@ void World::draw()
 	for (int i = 0; i < 3; ++i)
 	{
 		_lucioles[i]->draw();
+		_lucioles[i]->AI();
 	}
+
+	_player->draw();
 	
 
 	Water::inc();

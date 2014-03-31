@@ -21,6 +21,16 @@ void Player::spawn()
 
 }
 
+void Player::draw()
+{
+	Luciole::_phi = -Camera::_phi;
+	Luciole::_theta = Camera::_theta + 180.0f;
+
+	_pos = _center + Vect3D(0.0f, -LUCIOLE_WIDTH/2.0f, -0.2f);
+
+	Luciole::draw();
+}
+
 
 void Player::toucheJoueur(int key, int action)
 {
