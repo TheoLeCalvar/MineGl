@@ -1,5 +1,5 @@
 Le Calvar Théo
-Février 2014
+Avril 2014
 
 Projet OpenGL 
 
@@ -15,7 +15,7 @@ Conseil:
 
 Touches:
 	- Déplacement :
-		- z : avant
+		- z : avant 
 		- q : gauche
 		- s : arrière
 		- d : droite
@@ -34,11 +34,15 @@ Touches:
 		- 1 : activer/désactiver la lumière
 		- 2 : activer/désactiver le culling
 		- 3 : passer du mode plein au mode fil de fer
+		- 4 : allumer/éteindre les lumières positionnelles (lucioles)
+		- t : téléportation à la première luciole
+		- r : changer de mode de caméra
 
 
-En mode libre la caméra peut se déplacer n'importe où dans le monde, autrement le sujet est soumis à la gravité et les bloqué par les blocs. 
+En mode libre la caméra peut se déplacer n'importe où dans le monde, autrement le sujet est soumis à la gravité et est bloqué par les blocs. 
+De plus, lorsque le joueur est en mode libre il n'est plus soumis aux collisions, il peut donc sortir de l'espace du monde, ceci est resté car le mode libre est utilisé comme mode débugage.
 
 Les blocs formant le monde sont entièrement texturés et prennent en compte les matériaux (neutre pour les blocs non transparent et bleuté pour les blocs d'eau).
 Une lumière directionnel vient d'un soleil qui gravite autour du monde. 
 
-Il y a une luciole qui se déplace librement dans l'espace, les collisions avec le sol sont partiellement gérées (pas de masque de collision, seule la position d'origine du dessin est vérifiée). Cette luciole émet une faible lumière positionnelle.
+Il y a des lucioles qui se déplacent librement dans l'espace, les collisions avec le sol sont partiellement gérées (pas de hitbox, seule la position d'origine du dessin est vérifiée). Cette luciole émet une faible lumière positionnelle.
