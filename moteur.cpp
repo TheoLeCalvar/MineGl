@@ -104,7 +104,7 @@ void Moteur::start()
     //remplacement de gluPerspective, deprecated
     GLfloat angle = 45.0f;
     GLfloat f = 1.0f / tan((angle * (M_PI/180.0f))/2.0f);
-    GLfloat zFar = 400.0f, zNear = 0.5f;
+    GLfloat zFar = 400.0f, zNear = 0.1f;
     GLfloat aspect = (GLdouble)width/(GLdouble)height;
     GLfloat perspective[] =
     {

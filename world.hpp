@@ -1,10 +1,10 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#define WORLDSIZEX 129
-#define WORLDSIZEY 129
-#define WORLDSIZEZ 128
-#define WATER_LEVEL 50
+#define WORLDSIZEX 257
+#define WORLDSIZEY 257
+#define WORLDSIZEZ 256
+#define WATER_LEVEL 64
 
 #define XYZ(x, y, z) ((x) + (WORLDSIZEX * (y)) + (WORLDSIZEY * WORLDSIZEX * (z)))
 #define XY(x, y) ((x) + ((y) * WORLDSIZEX))

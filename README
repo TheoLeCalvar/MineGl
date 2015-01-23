@@ -5,13 +5,17 @@ Projet OpenGL
 
 Dépendances :
 	- libSOIL : http://www.lonesock.net/soil.html
-		Librairy prennant en charge le chargement de divers formats d'images, utilisé pour chargé des png
+		Librairy prenant en charge le chargement de divers formats d'images, utilisé pour chargé des png
 
 	- GLFW3 : http://www.glfw.org/
 		Création de la fenêtre et gestion des inputs
 
+	- C++ 11 :
+		Le projet utilise certaines fonctionnalités du C++11, le makefile inclus permet la compilation sur mes Os, si besoin il faut rajouter le flag précisant qu'il s’agit de c++11
+
 Conseil:
-	- si les fps sont trop bas il est possible de réduire la taille du monde à générer (voir world.hpp, modifier les constantes WORLDSIZE_, X et Y doivent être de la forme 2^n + 1, Z importe peu)
+	- si les fps sont trop bas il est possible de réduire la taille du monde à générer (voir world.hpp, modifier les constantes WORLDSIZE_, X et Y doivent être de la forme 2^n + 1, Z importe peu, WATER_LEVEL est assez important aussi, l’affichage de l’eau n’étant pas aussi optimisé que celui de la terre)
+	- quelques fois le programme plante au chargement, je n’ai jamais réussi à capturer un de ces segfault au  débugger, donc impossible de déterminer l’origine du problème, si le problème apparait il faut juste relancer le programme
 
 Touches:
 	- Déplacement :
@@ -38,11 +42,12 @@ Touches:
 		- t : téléportation à la première luciole
 		- r : changer de mode de caméra
 
+Le monde n'est pas inclus dans une boite pour des raisons de rendu esthétique, cependant il n’est pas possible d’en sortir en mode normal.
 
 En mode libre la caméra peut se déplacer n'importe où dans le monde, autrement le sujet est soumis à la gravité et est bloqué par les blocs. 
 De plus, lorsque le joueur est en mode libre il n'est plus soumis aux collisions, il peut donc sortir de l'espace du monde, ceci est resté car le mode libre est utilisé comme mode débugage.
 
 Les blocs formant le monde sont entièrement texturés et prennent en compte les matériaux (neutre pour les blocs non transparent et bleuté pour les blocs d'eau).
-Une lumière directionnel vient d'un soleil qui gravite autour du monde. 
+Une lumière directionnel vient d'un soleil qui gravite autour du monde. L’eau est animée. 
 
-Il y a des lucioles qui se déplacent librement dans l'espace, les collisions avec le sol sont partiellement gérées (pas de hitbox, seule la position d'origine du dessin est vérifiée). Cette luciole émet une faible lumière positionnelle.
+Il y a des lucioles qui se déplacent librement dans l'espace, les collisions avec le sol sont partiellement gérées (pas de hitbox, seule la position d'origine du dessin est vérifiée). Ces lucioles émettent une faible lumière (positionnelle), il est possible de les désactiver en appuyant sur 4.

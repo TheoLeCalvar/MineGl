@@ -231,7 +231,7 @@ void World::draw()
 
 void World::genHeight()
 {
-	float lissage = 0.35f;
+	float lissage = 0.3f;
 	float map[WORLDSIZEX * WORLDSIZEY];
 	int espace = WORLDSIZEX;
 	Cube * c;
